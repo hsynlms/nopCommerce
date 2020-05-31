@@ -12,6 +12,13 @@ namespace Nop.Services.Configuration
     public partial interface ISettingService
     {
         /// <summary>
+        /// Adds a setting
+        /// </summary>
+        /// <param name="setting">Setting</param>
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void InsertSetting(Setting setting, bool clearCache = true);
+
+        /// <summary>
         /// Gets a setting by identifier
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
