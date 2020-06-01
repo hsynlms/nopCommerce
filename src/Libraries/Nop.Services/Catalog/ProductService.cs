@@ -412,7 +412,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        public virtual void InsertProduct(Product product)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProduct(Product product, bool skipEventNotification = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -420,8 +421,11 @@ namespace Nop.Services.Catalog
             //insert
             _productRepository.Insert(product);
 
-            //event notification
-            _eventPublisher.EntityInserted(product);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(product);
+            }
         }
 
         /// <summary>
@@ -1331,7 +1335,7 @@ namespace Nop.Services.Catalog
                 {
                     //new store
                     if (existingStoreMappings.Count(sm => sm.StoreId == store.Id) == 0)
-                        _storeMappingService.InsertStoreMapping(product, store.Id);
+                        _storeMappingService.InsertStoreMapping(product, store.Id, skipEventNotification);
                 }
                 else
                 {
@@ -1414,7 +1418,7 @@ namespace Nop.Services.Catalog
                     UpdateProduct(product);
 
                     //quantity change history
-                    AddStockQuantityHistoryEntry(product, quantityToChange, product.StockQuantity, product.WarehouseId, message);
+                    AddStockQuantityHistoryEntry(product, quantityToChange, product.StockQuantity, product.WarehouseId, message, skipEventNotification);
                 }
 
                 //qty is reduced. check if minimum stock quantity is reached
@@ -1475,7 +1479,7 @@ namespace Nop.Services.Catalog
                     _productAttributeService.UpdateProductAttributeCombination(combination);
 
                     //quantity change history
-                    AddStockQuantityHistoryEntry(product, quantityToChange, combination.StockQuantity, message: message, combinationId: combination.Id);
+                    AddStockQuantityHistoryEntry(product, quantityToChange, combination.StockQuantity, message: message, combinationId: combination.Id, skipEventNotification);
 
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
@@ -1667,7 +1671,7 @@ namespace Nop.Services.Catalog
             UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
-            AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message);
+            AddStockQuantityHistoryEntry(product, quantity, pwi.StockQuantity, warehouseId, message, skipEventNotification);
         }
 
         /// <summary>
@@ -1707,7 +1711,7 @@ namespace Nop.Services.Catalog
             UpdateProductWarehouseInventory(pwi);
 
             //quantity change history
-            AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message);
+            AddStockQuantityHistoryEntry(product, qty, pwi.StockQuantity, shipmentItem.WarehouseId, message, skipEventNotification);
 
             return qty;
         }
@@ -1769,15 +1773,19 @@ namespace Nop.Services.Catalog
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        public virtual void InsertRelatedProduct(RelatedProduct relatedProduct)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertRelatedProduct(RelatedProduct relatedProduct, bool skipEventNotification = false)
         {
             if (relatedProduct == null)
                 throw new ArgumentNullException(nameof(relatedProduct));
 
             _relatedProductRepository.Insert(relatedProduct);
 
-            //event notification
-            _eventPublisher.EntityInserted(relatedProduct);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(relatedProduct);
+            }
         }
 
         /// <summary>
@@ -1879,15 +1887,19 @@ namespace Nop.Services.Catalog
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCrossSellProduct(CrossSellProduct crossSellProduct, bool skipEventNotification = false)
         {
             if (crossSellProduct == null)
                 throw new ArgumentNullException(nameof(crossSellProduct));
 
             _crossSellProductRepository.Insert(crossSellProduct);
 
-            //event notification
-            _eventPublisher.EntityInserted(crossSellProduct);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(crossSellProduct);
+            }
         }
 
         /// <summary>
@@ -2040,15 +2052,19 @@ namespace Nop.Services.Catalog
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        public virtual void InsertTierPrice(TierPrice tierPrice)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTierPrice(TierPrice tierPrice, bool skipEventNotification = false)
         {
             if (tierPrice == null)
                 throw new ArgumentNullException(nameof(tierPrice));
 
             _tierPriceRepository.Insert(tierPrice);
 
-            //event notification
-            _eventPublisher.EntityInserted(tierPrice);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(tierPrice);
+            }
         }
 
         /// <summary>
@@ -2142,15 +2158,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        public virtual void InsertProductPicture(ProductPicture productPicture)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductPicture(ProductPicture productPicture, bool skipEventNotification = false)
         {
             if (productPicture == null)
                 throw new ArgumentNullException(nameof(productPicture));
 
             _productPictureRepository.Insert(productPicture);
 
-            //event notification
-            _eventPublisher.EntityInserted(productPicture);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productPicture);
+            }
         }
 
         /// <summary>
@@ -2321,15 +2341,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        public virtual void InsertProductReview(ProductReview productReview)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductReview(ProductReview productReview, bool skipEventNotification = false)
         {
             if (productReview == null)
                 throw new ArgumentNullException(nameof(productReview));
 
             _productReviewRepository.Insert(productReview);
 
-            //event notification
-            _eventPublisher.EntityInserted(productReview);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productReview);
+            }
         }
 
         /// <summary>
@@ -2369,15 +2393,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product review helpfulness record
         /// </summary>
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
-        public virtual void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness, bool skipEventNotification = false)
         {
             if (productReviewHelpfulness == null)
                 throw new ArgumentNullException(nameof(productReviewHelpfulness));
 
             _productReviewHelpfulnessRepository.Insert(productReviewHelpfulness);
 
-            //event notification
-            _eventPublisher.EntityInserted(productReviewHelpfulness);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productReviewHelpfulness);
+            }
         }
 
         /// <summary>
@@ -2385,7 +2413,8 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
-        public virtual void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness, bool skipEventNotification = false)
         {
             if (productReview is null)
                 throw new ArgumentNullException(nameof(productReview));
@@ -2402,10 +2431,13 @@ namespace Nop.Services.Catalog
                     WasHelpful = helpfulness,
                 };
 
-                InsertProductReviewHelpfulness(prh);
+                InsertProductReviewHelpfulness(prh, skipEventNotification);
 
-                //event notification
-                _eventPublisher.EntityInserted(prh);
+                if (!skipEventNotification)
+                {
+                    //event notification
+                    _eventPublisher.EntityInserted(prh);
+                }
             }
             else
             {
@@ -2523,15 +2555,19 @@ namespace Nop.Services.Catalog
         /// Inserts a record to manage product inventory per warehouse
         /// </summary>
         /// <param name="pwi">Record to manage product inventory per warehouse</param>
-        public virtual void InsertProductWarehouseInventory(ProductWarehouseInventory pwi)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductWarehouseInventory(ProductWarehouseInventory pwi, bool skipEventNotification = false)
         {
             if (pwi == null)
                 throw new ArgumentNullException(nameof(pwi));
 
             _productWarehouseInventoryRepository.Insert(pwi);
 
-            //event notification
-            _eventPublisher.EntityInserted(pwi);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(pwi);
+            }
         }
 
         /// <summary>
@@ -2583,8 +2619,9 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
-            int warehouseId = 0, string message = "", int? combinationId = null)
+            int warehouseId = 0, string message = "", int? combinationId = null, bool skipEventNotification = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -2605,8 +2642,11 @@ namespace Nop.Services.Catalog
 
             _stockQuantityHistoryRepository.Insert(historyEntry);
 
-            //event notification
-            _eventPublisher.EntityInserted(historyEntry);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(historyEntry);
+            }
         }
 
         /// <summary>
@@ -2691,15 +2731,19 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        public virtual void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping, bool skipEventNotification = false)
         {
             if (discountProductMapping is null)
                 throw new ArgumentNullException(nameof(discountProductMapping));
 
             _discountProductMappingRepository.Insert(discountProductMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(discountProductMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discountProductMapping);
+            }
         }
 
         /// <summary>

@@ -122,15 +122,19 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
-        public virtual void InsertConsent(GdprConsent gdprConsent)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertConsent(GdprConsent gdprConsent, bool skipEventNotification = false)
         {
             if (gdprConsent == null)
                 throw new ArgumentNullException(nameof(gdprConsent));
 
             _gdprConsentRepository.Insert(gdprConsent);
 
-            //event notification
-            _eventPublisher.EntityInserted(gdprConsent);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(gdprConsent);
+            }
         }
 
         /// <summary>
@@ -245,15 +249,19 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR log
         /// </summary>
         /// <param name="gdprLog">GDPR log</param>
-        public virtual void InsertLog(GdprLog gdprLog)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertLog(GdprLog gdprLog, bool skipEventNotification = false)
         {
             if (gdprLog == null)
                 throw new ArgumentNullException(nameof(gdprLog));
 
             _gdprLogRepository.Insert(gdprLog);
 
-            //event notification
-            _eventPublisher.EntityInserted(gdprLog);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(gdprLog);
+            }
         }
 
         /// <summary>
@@ -263,7 +271,8 @@ namespace Nop.Services.Gdpr
         /// <param name="consentId">Consent identifier</param>
         /// <param name="requestType">Request type</param>
         /// <param name="requestDetails">Request details</param>
-        public virtual void InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -277,7 +286,7 @@ namespace Nop.Services.Gdpr
                 RequestDetails = requestDetails,
                 CreatedOnUtc = DateTime.UtcNow
             };
-            InsertLog(gdprLog);
+            InsertLog(gdprLog, skipEventNotification);
         }
 
         /// <summary>
@@ -318,7 +327,8 @@ namespace Nop.Services.Gdpr
         /// Permanent delete of customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void PermanentDeleteCustomer(Customer customer)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void PermanentDeleteCustomer(Customer customer, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -357,7 +367,7 @@ namespace Nop.Services.Gdpr
 
             //shopping cart items
             foreach (var sci in _shoppingCartService.GetShoppingCart(customer))
-                _shoppingCartService.DeleteShoppingCartItem(sci);
+                _shoppingCartService.DeleteShoppingCartItem(sci, skipEventNotification: skipEventNotification);
 
             //private messages (sent)
             foreach (var pm in _forumService.GetAllPrivateMessages(0, customer.Id, 0, null, null, null, null))
@@ -410,7 +420,7 @@ namespace Nop.Services.Gdpr
             if (!_customerService.IsGuest(customer))
             {
                 var guestRole = _customerService.GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
-                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
+                _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id }, skipEventNotification);
             }
 
             var email = customer.Email;

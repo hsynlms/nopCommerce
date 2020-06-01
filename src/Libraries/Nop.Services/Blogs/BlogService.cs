@@ -213,15 +213,19 @@ namespace Nop.Services.Blogs
         /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        public virtual void InsertBlogPost(BlogPost blogPost)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertBlogPost(BlogPost blogPost, bool skipEventNotification = false)
         {
             if (blogPost == null)
                 throw new ArgumentNullException(nameof(blogPost));
 
             _blogPostRepository.Insert(blogPost);
 
-            //event notification
-            _eventPublisher.EntityInserted(blogPost);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(blogPost);
+            }
         }
 
         /// <summary>
@@ -437,15 +441,19 @@ namespace Nop.Services.Blogs
         /// Inserts a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        public virtual void InsertBlogComment(BlogComment blogComment)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertBlogComment(BlogComment blogComment, bool skipEventNotification = false)
         {
             if (blogComment == null)
                 throw new ArgumentNullException(nameof(blogComment));
 
             _blogCommentRepository.Insert(blogComment);
 
-            //event notification
-            _eventPublisher.EntityInserted(blogComment);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(blogComment);
+            }
         }
 
         /// <summary>

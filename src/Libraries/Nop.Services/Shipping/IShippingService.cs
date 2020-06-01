@@ -39,7 +39,8 @@ namespace Nop.Services.Shipping
         /// Inserts a shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        void InsertShippingMethod(ShippingMethod shippingMethod);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertShippingMethod(ShippingMethod shippingMethod, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the shipping method
@@ -67,7 +68,8 @@ namespace Nop.Services.Shipping
         /// Inserts a shipping country mapping
         /// </summary>
         /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
-        void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Delete the shipping country mapping
@@ -103,7 +105,8 @@ namespace Nop.Services.Shipping
         /// Inserts a warehouse
         /// </summary>
         /// <param name="warehouse">Warehouse</param>
-        void InsertWarehouse(Warehouse warehouse);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertWarehouse(Warehouse warehouse, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the warehouse

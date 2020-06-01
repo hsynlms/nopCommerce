@@ -58,7 +58,8 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        void InsertVendor(Vendor vendor);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertVendor(Vendor vendor, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the vendor
@@ -92,7 +93,8 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor note
         /// </summary>
         /// <param name="vendorNote">Vendor note</param>
-        void InsertVendorNote(VendorNote vendorNote);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertVendorNote(VendorNote vendorNote, bool skipEventNotification = false);
 
         /// <summary>
         /// Formats the vendor note text

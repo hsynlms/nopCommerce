@@ -84,15 +84,19 @@ namespace Nop.Services.Catalog
         /// Inserts manufacturer template
         /// </summary>
         /// <param name="manufacturerTemplate">Manufacturer template</param>
-        public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertManufacturerTemplate(ManufacturerTemplate manufacturerTemplate, bool skipEventNotification = false)
         {
             if (manufacturerTemplate == null)
                 throw new ArgumentNullException(nameof(manufacturerTemplate));
 
             _manufacturerTemplateRepository.Insert(manufacturerTemplate);
 
-            //event notification
-            _eventPublisher.EntityInserted(manufacturerTemplate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(manufacturerTemplate);
+            }
         }
 
         /// <summary>

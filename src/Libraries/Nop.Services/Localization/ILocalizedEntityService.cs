@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using Nop.Core;
 using Nop.Core.Domain.Localization;
@@ -37,7 +37,8 @@ namespace Nop.Services.Localization
         /// Inserts a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        void InsertLocalizedProperty(LocalizedProperty localizedProperty);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertLocalizedProperty(LocalizedProperty localizedProperty, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the localized property
@@ -53,10 +54,11 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         void SaveLocalizedValue<T>(T entity,
             Expression<Func<T, string>> keySelector,
             string localeValue,
-            int languageId) where T : BaseEntity, ILocalizedEntity;
+            int languageId, bool skipEventNotification = false) where T : BaseEntity, ILocalizedEntity;
 
         /// <summary>
         /// Save localized value
@@ -67,9 +69,10 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         void SaveLocalizedValue<T, TPropType>(T entity,
            Expression<Func<T, TPropType>> keySelector,
            TPropType localeValue,
-           int languageId) where T : BaseEntity, ILocalizedEntity;
+           int languageId, bool skipEventNotification = false) where T : BaseEntity, ILocalizedEntity;
     }
 }

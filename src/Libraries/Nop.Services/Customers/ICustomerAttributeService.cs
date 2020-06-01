@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers
@@ -31,7 +31,8 @@ namespace Nop.Services.Customers
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        void InsertCustomerAttribute(CustomerAttribute customerAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomerAttribute(CustomerAttribute customerAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the customer attribute
@@ -63,7 +64,8 @@ namespace Nop.Services.Customers
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the customer attribute value

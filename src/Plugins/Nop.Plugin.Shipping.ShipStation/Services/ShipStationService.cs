@@ -480,12 +480,12 @@ namespace Nop.Plugin.Shipping.ShipStation.Services
                             WarehouseId = warehouseId
                         };
 
-                        _shipmentService.InsertShipmentItem(shipmentItem);
+                        _shipmentService.InsertShipmentItem(shipmentItem, skipEventNotification);
                     }
 
                     shipment.TotalWeight = totalWeight;
 
-                    _shipmentService.InsertShipment(shipment);
+                    _shipmentService.InsertShipment(shipment, skipEventNotification);
                 }
                 else
                 {

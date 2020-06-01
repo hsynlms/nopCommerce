@@ -1,4 +1,4 @@
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -56,7 +56,8 @@ namespace Nop.Services.Catalog
         /// Inserts subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        void InsertSubscription(BackInStockSubscription subscription);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertSubscription(BackInStockSubscription subscription, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates subscription

@@ -142,15 +142,19 @@ namespace Nop.Services.News
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        public virtual void InsertNews(NewsItem news)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertNews(NewsItem news, bool skipEventNotification = false)
         {
             if (news == null)
                 throw new ArgumentNullException(nameof(news));
 
             _newsItemRepository.Insert(news);
 
-            //event notification
-            _eventPublisher.EntityInserted(news);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(news);
+            }
         }
 
         /// <summary>
@@ -328,15 +332,19 @@ namespace Nop.Services.News
         /// Inserts a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        public virtual void InsertNewsComment(NewsComment comment)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertNewsComment(NewsComment comment, bool skipEventNotification = false)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
             _newsCommentRepository.Insert(comment);
 
-            //event notification
-            _eventPublisher.EntityInserted(comment);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(comment);
+            }
         }
 
         /// <summary>

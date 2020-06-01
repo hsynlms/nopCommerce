@@ -128,15 +128,19 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        public virtual void InsertGiftCard(GiftCard giftCard)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertGiftCard(GiftCard giftCard, bool skipEventNotification = false)
         {
             if (giftCard == null)
                 throw new ArgumentNullException(nameof(giftCard));
 
             _giftCardRepository.Insert(giftCard);
 
-            //event notification
-            _eventPublisher.EntityInserted(giftCard);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(giftCard);
+            }
         }
 
         /// <summary>
@@ -282,15 +286,19 @@ namespace Nop.Services.Orders
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        public virtual void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory, bool skipEventNotification = false)
         {
             if (giftCardUsageHistory is null)
                 throw new ArgumentNullException(nameof(giftCardUsageHistory));
 
             _giftCardUsageHistoryRepository.Insert(giftCardUsageHistory);
 
-            //event notification
-            _eventPublisher.EntityInserted(giftCardUsageHistory);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(giftCardUsageHistory);
+            }
         }
 
         /// <summary>

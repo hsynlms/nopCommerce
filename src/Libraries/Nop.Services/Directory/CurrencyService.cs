@@ -123,15 +123,19 @@ namespace Nop.Services.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        public virtual void InsertCurrency(Currency currency)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCurrency(Currency currency, bool skipEventNotification = false)
         {
             if (currency == null)
                 throw new ArgumentNullException(nameof(currency));
 
             _currencyRepository.Insert(currency);
 
-            //event notification
-            _eventPublisher.EntityInserted(currency);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(currency);
+            }
         }
 
         /// <summary>

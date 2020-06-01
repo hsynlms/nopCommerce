@@ -89,13 +89,15 @@ namespace Nop.Services.Customers
         /// Gets built-in system record used for background tasks
         /// </summary>
         /// <returns>A customer object</returns>
-        Customer GetOrCreateBackgroundTaskUser();
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        Customer GetOrCreateBackgroundTaskUser(bool skipEventNotification = false);
 
         /// <summary>
         /// Gets built-in system guest record used for requests from search engines
         /// </summary>
         /// <returns>A customer object</returns>
-        Customer GetOrCreateSearchEngineUser();
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        Customer GetOrCreateSearchEngineUser(bool skipEventNotification = false);
 
         /// <summary>
         /// Gets a customer
@@ -143,13 +145,15 @@ namespace Nop.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        Customer InsertGuestCustomer();
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        Customer InsertGuestCustomer(bool skipEventNotification = false);
 
         /// <summary>
         /// Insert a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void InsertCustomer(Customer customer);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomer(Customer customer, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the customer
@@ -258,7 +262,8 @@ namespace Nop.Services.Customers
         /// Add a customer-customer role mapping
         /// </summary>
         /// <param name="roleMapping">Customer-customer role mapping</param>
-        void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Remove a customer-customer role mapping
@@ -314,7 +319,8 @@ namespace Nop.Services.Customers
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        void InsertCustomerRole(CustomerRole customerRole);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomerRole(CustomerRole customerRole, bool skipEventNotification = false);
 
         /// <summary>
         /// Gets a value indicating whether customer is in a certain customer role
@@ -396,7 +402,8 @@ namespace Nop.Services.Customers
         /// Insert a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
-        void InsertCustomerPassword(CustomerPassword customerPassword);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomerPassword(CustomerPassword customerPassword, bool skipEventNotification = false);
 
         /// <summary>
         /// Update a customer password
@@ -471,7 +478,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
-        void InsertCustomerAddress(Customer customer, Address address);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCustomerAddress(Customer customer, Address address, bool skipEventNotification = false);
 
         #endregion
     }

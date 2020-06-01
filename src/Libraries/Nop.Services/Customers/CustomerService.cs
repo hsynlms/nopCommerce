@@ -467,7 +467,8 @@ namespace Nop.Services.Customers
         /// Gets built-in system record used for background tasks
         /// </summary>
         /// <returns>A customer object</returns>
-        public virtual Customer GetOrCreateBackgroundTaskUser()
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual Customer GetOrCreateBackgroundTaskUser(bool skipEventNotification = false)
         {
             var backgroundTaskUser = GetCustomerBySystemName(NopCustomerDefaults.BackgroundTaskCustomerName);
 
@@ -487,14 +488,14 @@ namespace Nop.Services.Customers
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
                 
-                InsertCustomer(backgroundTaskUser);
+                InsertCustomer(backgroundTaskUser, skipEventNotification);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
                 if(guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
-                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id });
+                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = backgroundTaskUser.Id }, skipEventNotification);
             }
 
             return backgroundTaskUser;
@@ -504,7 +505,8 @@ namespace Nop.Services.Customers
         /// Gets built-in system guest record used for requests from search engines
         /// </summary>
         /// <returns>A customer object</returns>
-        public virtual Customer GetOrCreateSearchEngineUser()
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual Customer GetOrCreateSearchEngineUser(bool skipEventNotification = false)
         {
             var searchEngineUser = GetCustomerBySystemName(NopCustomerDefaults.SearchEngineCustomerName);
 
@@ -524,14 +526,14 @@ namespace Nop.Services.Customers
                     RegisteredInStoreId = _storeContext.CurrentStore.Id
                 };
                 
-                InsertCustomer(searchEngineUser);
+                InsertCustomer(searchEngineUser, skipEventNotification);
 
                 var guestRole = GetCustomerRoleBySystemName(NopCustomerDefaults.GuestsRoleName);
 
                 if(guestRole is null)
                     throw new NopException("'Guests' role could not be loaded");
 
-                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id });
+                AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerRoleId = guestRole.Id, CustomerId = searchEngineUser.Id }, skipEventNotification);
             }
 
             return searchEngineUser;
@@ -559,7 +561,8 @@ namespace Nop.Services.Customers
         /// Insert a guest customer
         /// </summary>
         /// <returns>Customer</returns>
-        public virtual Customer InsertGuestCustomer()
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual Customer InsertGuestCustomer(bool skipEventNotification = false)
         {
             var customer = new Customer
             {
@@ -576,10 +579,13 @@ namespace Nop.Services.Customers
 
             _customerRepository.Insert(customer);
 
-            //event notification
-            _eventPublisher.EntityInserted(customer);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customer);
+            }
 
-            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id });
+            AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = guestRole.Id }, skipEventNotification);
 
             return customer;
         }
@@ -588,15 +594,19 @@ namespace Nop.Services.Customers
         /// Insert a customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        public virtual void InsertCustomer(Customer customer)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomer(Customer customer, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
 
             _customerRepository.Insert(customer);
 
-            //event notification
-            _eventPublisher.EntityInserted(customer);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customer);
+            }
         }
 
         /// <summary>
@@ -1042,14 +1052,19 @@ namespace Nop.Services.Customers
         /// Add a customer-customer role mapping
         /// </summary>
         /// <param name="roleMapping">Customer-customer role mapping</param>
-        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public void AddCustomerRoleMapping(CustomerCustomerRoleMapping roleMapping, bool skipEventNotification = false)
         {
             if (roleMapping is null)
                 throw new ArgumentNullException(nameof(roleMapping));
 
             _customerCustomerRoleMappingRepository.Insert(roleMapping);
 
-            _eventPublisher.EntityInserted(roleMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(roleMapping);
+            }
         }
 
         /// <summary>
@@ -1195,15 +1210,19 @@ namespace Nop.Services.Customers
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
-        public virtual void InsertCustomerRole(CustomerRole customerRole)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomerRole(CustomerRole customerRole, bool skipEventNotification = false)
         {
             if (customerRole == null)
                 throw new ArgumentNullException(nameof(customerRole));
 
             _customerRoleRepository.Insert(customerRole);
 
-            //event notification
-            _eventPublisher.EntityInserted(customerRole);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customerRole);
+            }
         }
 
         /// <summary>
@@ -1346,15 +1365,19 @@ namespace Nop.Services.Customers
         /// Insert a customer password
         /// </summary>
         /// <param name="customerPassword">Customer password</param>
-        public virtual void InsertCustomerPassword(CustomerPassword customerPassword)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomerPassword(CustomerPassword customerPassword, bool skipEventNotification = false)
         {
             if (customerPassword == null)
                 throw new ArgumentNullException(nameof(customerPassword));
 
             _customerPasswordRepository.Insert(customerPassword);
 
-            //event notification
-            _eventPublisher.EntityInserted(customerPassword);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customerPassword);
+            }
         }
 
         /// <summary>
@@ -1488,7 +1511,8 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="address">Address</param>
-        public virtual void InsertCustomerAddress(Customer customer, Address address)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomerAddress(Customer customer, Address address, bool skipEventNotification = false)
         {
             if (customer is null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1506,8 +1530,11 @@ namespace Nop.Services.Customers
 
                 _customerAddressMappingRepository.Insert(mapping);
 
-                //event notification
-                _eventPublisher.EntityInserted(mapping);
+                if (!skipEventNotification)
+                {
+                    //event notification
+                    _eventPublisher.EntityInserted(mapping);
+                }
             }
         }
 

@@ -50,8 +50,9 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; pass 0 to load all records</param>
         /// <param name="storeId">Store identifier; pass null to load all records</param>
         /// <param name="showNotActivated">Whether to load reward points that did not yet activated</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Query to load reward points history</returns>
-        protected virtual IQueryable<RewardPointsHistory> GetRewardPointsQuery(int customerId, int? storeId, bool showNotActivated = false)
+        protected virtual IQueryable<RewardPointsHistory> GetRewardPointsQuery(int customerId, int? storeId, bool showNotActivated = false, bool skipEventNotification = false)
         {
             var query = _rewardPointsHistoryRepository.Table;
 
@@ -70,7 +71,7 @@ namespace Nop.Services.Orders
             }
 
             //update points balance
-            UpdateRewardPointsBalance(query);
+            UpdateRewardPointsBalance(query, skipEventNotification);
 
             return query;
         }
@@ -79,7 +80,8 @@ namespace Nop.Services.Orders
         /// Update reward points balance if necessary
         /// </summary>
         /// <param name="query">Input query</param>
-        protected virtual void UpdateRewardPointsBalance(IQueryable<RewardPointsHistory> query)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        protected virtual void UpdateRewardPointsBalance(IQueryable<RewardPointsHistory> query, bool skipEventNotification = false)
         {
             //get expired points
             var nowUtc = DateTime.UtcNow;
@@ -98,7 +100,7 @@ namespace Nop.Services.Orders
                     Message = string.Format(_localizationService.GetResource("RewardPoints.Expired"),
                         _dateTimeHelper.ConvertToUserTime(historyEntry.CreatedOnUtc, DateTimeKind.Utc)),
                     CreatedOnUtc = historyEntry.EndDateUtc.Value
-                });
+                }, skipEventNotification);
 
                 historyEntry.ValidPoints = 0;
                 UpdateRewardPointsHistoryEntry(historyEntry);
@@ -140,11 +142,13 @@ namespace Nop.Services.Orders
         /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Reward point history records</returns>
         public virtual IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue)
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue,
+            bool skipEventNotification = false)
         {
-            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated);
+            var query = GetRewardPointsQuery(customerId, storeId, showNotActivated, skipEventNotification);
 
             if (orderGuid.HasValue)
                 query = query.Where(historyEntry => historyEntry.UsedWithOrder == orderGuid.Value);
@@ -161,10 +165,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Balance</returns>
-        public virtual int GetRewardPointsBalance(int customerId, int storeId)
+        public virtual int GetRewardPointsBalance(int customerId, int storeId, bool skipEventNotification = false)
         {
-            var query = GetRewardPointsQuery(customerId, storeId)
+            var query = GetRewardPointsQuery(customerId, storeId, skipEventNotification: skipEventNotification)
                 .OrderByDescending(historyEntry => historyEntry.CreatedOnUtc).ThenByDescending(historyEntry => historyEntry.Id);
 
             //return point balance of the first actual history entry
@@ -196,9 +201,11 @@ namespace Nop.Services.Orders
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Reward points history entry identifier</returns>
         public virtual int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
-            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null)
+            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null,
+            bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -215,7 +222,7 @@ namespace Nop.Services.Orders
                 CustomerId = customer.Id,
                 StoreId = storeId,
                 Points = points,
-                PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId) + points),
+                PointsBalance = activatingDate.HasValue ? null : (int?)(GetRewardPointsBalance(customer.Id, storeId, skipEventNotification) + points),
                 UsedAmount = usedAmount,
                 Message = message,
                 CreatedOnUtc = activatingDate ?? DateTime.UtcNow,
@@ -223,13 +230,13 @@ namespace Nop.Services.Orders
                 ValidPoints = points > 0 ? (int?)points : null,
                 UsedWithOrder = usedWithOrder?.OrderGuid
             };
-            InsertRewardPointsHistoryEntry(newHistoryEntry);
+            InsertRewardPointsHistoryEntry(newHistoryEntry, skipEventNotification);
 
             //reduce valid points of previous entries
             if (points >= 0) 
                 return newHistoryEntry.Id;
 
-            var withValidPoints = GetRewardPointsQuery(customer.Id, storeId)
+            var withValidPoints = GetRewardPointsQuery(customer.Id, storeId, skipEventNotification: skipEventNotification)
                 .Where(historyEntry => historyEntry.ValidPoints > 0)
                 .OrderBy(historyEntry => historyEntry.CreatedOnUtc).ThenBy(historyEntry => historyEntry.Id).ToList();
             foreach (var historyEntry in withValidPoints)
@@ -262,15 +269,19 @@ namespace Nop.Services.Orders
         /// Insert the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        public virtual void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory, bool skipEventNotification = false)
         {
             if (rewardPointsHistory == null)
                 throw new ArgumentNullException(nameof(rewardPointsHistory));
 
             _rewardPointsHistoryRepository.Insert(rewardPointsHistory);
 
-            //event notification
-            _eventPublisher.EntityInserted(rewardPointsHistory);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(rewardPointsHistory);
+            }
         }
 
         /// <summary>

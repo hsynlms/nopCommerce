@@ -264,15 +264,19 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        public virtual void InsertManufacturer(Manufacturer manufacturer)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertManufacturer(Manufacturer manufacturer, bool skipEventNotification = false)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException(nameof(manufacturer));
 
             _manufacturerRepository.Insert(manufacturer);
-            
-            //event notification
-            _eventPublisher.EntityInserted(manufacturer);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(manufacturer);
+            }
         }
 
         /// <summary>
@@ -479,15 +483,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductManufacturer(ProductManufacturer productManufacturer, bool skipEventNotification = false)
         {
             if (productManufacturer == null)
                 throw new ArgumentNullException(nameof(productManufacturer));
 
             _productManufacturerRepository.Insert(productManufacturer);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productManufacturer);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productManufacturer);
+            }
         }
 
         /// <summary>
@@ -578,15 +586,19 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        public void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping, bool skipEventNotification = false)
         {
             if (discountManufacturerMapping is null)
                 throw new ArgumentNullException(nameof(discountManufacturerMapping));
 
             _discountManufacturerMappingRepository.Insert(discountManufacturerMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(discountManufacturerMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discountManufacturerMapping);
+            }
         }
 
         /// <summary>

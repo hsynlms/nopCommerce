@@ -119,7 +119,8 @@ namespace Nop.Services.Common
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        public virtual void InsertAddress(Address address)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAddress(Address address, bool skipEventNotification = false)
         {
             if (address == null)
                 throw new ArgumentNullException(nameof(address));
@@ -133,9 +134,12 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
-            
-            //event notification
-            _eventPublisher.EntityInserted(address);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(address);
+            }
         }
 
         /// <summary>

@@ -34,7 +34,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        void InsertForumGroup(ForumGroup forumGroup);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertForumGroup(ForumGroup forumGroup, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the forum group
@@ -66,7 +67,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        void InsertForum(Forum forum);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertForum(Forum forum, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the forum
@@ -125,7 +127,8 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        void InsertTopic(ForumTopic forumTopic, bool sendNotifications);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTopic(ForumTopic forumTopic, bool sendNotifications, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the forum topic
@@ -186,7 +189,8 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        void InsertPost(ForumPost forumPost, bool sendNotifications);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPost(ForumPost forumPost, bool sendNotifications, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the forum post
@@ -228,7 +232,8 @@ namespace Nop.Services.Forums
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        void InsertPrivateMessage(PrivateMessage privateMessage);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPrivateMessage(PrivateMessage privateMessage, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the private message
@@ -265,7 +270,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        void InsertSubscription(ForumSubscription forumSubscription);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertSubscription(ForumSubscription forumSubscription, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the forum subscription
@@ -372,7 +378,8 @@ namespace Nop.Services.Forums
         /// Insert a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        void InsertPostVote(ForumPostVote postVote);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPostVote(ForumPostVote postVote, bool skipEventNotification = false);
 
         /// <summary>
         /// Update a post vote

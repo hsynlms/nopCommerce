@@ -39,7 +39,8 @@ namespace Nop.Services.Security
         /// Inserts a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        void InsertPermissionRecord(PermissionRecord permission);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPermissionRecord(PermissionRecord permission, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the permission
@@ -51,7 +52,8 @@ namespace Nop.Services.Security
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
-        void InstallPermissions(IPermissionProvider permissionProvider);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InstallPermissions(IPermissionProvider permissionProvider, bool skipEventNotification = false);
 
         /// <summary>
         /// Uninstall permissions
@@ -114,6 +116,7 @@ namespace Nop.Services.Security
         /// Inserts a permission record-customer role mapping
         /// </summary>
         /// <param name="permissionRecordCustomerRoleMapping">Permission record-customer role mapping</param>
-        void InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping, bool skipEventNotification = false);
     }
 }

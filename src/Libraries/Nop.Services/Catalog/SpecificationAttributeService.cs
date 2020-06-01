@@ -141,15 +141,19 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        public virtual void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute, bool skipEventNotification = false)
         {
             if (specificationAttribute == null)
                 throw new ArgumentNullException(nameof(specificationAttribute));
 
             _specificationAttributeRepository.Insert(specificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(specificationAttribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(specificationAttribute);
+            }
         }
 
         /// <summary>
@@ -246,15 +250,19 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        public virtual void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption, bool skipEventNotification = false)
         {
             if (specificationAttributeOption == null)
                 throw new ArgumentNullException(nameof(specificationAttributeOption));
 
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
-            
-            //event notification
-            _eventPublisher.EntityInserted(specificationAttributeOption);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(specificationAttributeOption);
+            }
         }
 
         /// <summary>
@@ -357,15 +365,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        public virtual void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute, bool skipEventNotification = false)
         {
             if (productSpecificationAttribute == null)
                 throw new ArgumentNullException(nameof(productSpecificationAttribute));
 
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productSpecificationAttribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productSpecificationAttribute);
+            }
         }
 
         /// <summary>

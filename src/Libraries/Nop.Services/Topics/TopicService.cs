@@ -244,15 +244,19 @@ namespace Nop.Services.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        public virtual void InsertTopic(Topic topic)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTopic(Topic topic, bool skipEventNotification = false)
         {
             if (topic == null)
                 throw new ArgumentNullException(nameof(topic));
 
             _topicRepository.Insert(topic);
 
-            //event notification
-            _eventPublisher.EntityInserted(topic);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(topic);
+            }
         }
 
         /// <summary>

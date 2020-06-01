@@ -84,15 +84,19 @@ namespace Nop.Services.Catalog
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        public virtual void InsertCategoryTemplate(CategoryTemplate categoryTemplate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCategoryTemplate(CategoryTemplate categoryTemplate, bool skipEventNotification = false)
         {
             if (categoryTemplate == null)
                 throw new ArgumentNullException(nameof(categoryTemplate));
 
             _categoryTemplateRepository.Insert(categoryTemplate);
 
-            //event notification
-            _eventPublisher.EntityInserted(categoryTemplate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(categoryTemplate);
+            }
         }
 
         /// <summary>

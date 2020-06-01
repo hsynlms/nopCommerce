@@ -149,15 +149,19 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor
         /// </summary>
         /// <param name="vendor">Vendor</param>
-        public virtual void InsertVendor(Vendor vendor)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertVendor(Vendor vendor, bool skipEventNotification = false)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
 
             _vendorRepository.Insert(vendor);
 
-            //event notification
-            _eventPublisher.EntityInserted(vendor);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(vendor);
+            }
         }
 
         /// <summary>
@@ -223,15 +227,19 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor note
         /// </summary>
         /// <param name="vendorNote">Vendor note</param>
-        public virtual void InsertVendorNote(VendorNote vendorNote)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertVendorNote(VendorNote vendorNote, bool skipEventNotification = false)
         {
             if (vendorNote == null)
                 throw new ArgumentNullException(nameof(vendorNote));
 
             _vendorNoteRepository.Insert(vendorNote);
 
-            //event notification
-            _eventPublisher.EntityInserted(vendorNote);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(vendorNote);
+            }
         }
 
         /// <summary>

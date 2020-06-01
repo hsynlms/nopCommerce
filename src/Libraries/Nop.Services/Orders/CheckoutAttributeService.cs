@@ -147,15 +147,19 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        public virtual void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute, bool skipEventNotification = false)
         {
             if (checkoutAttribute == null)
                 throw new ArgumentNullException(nameof(checkoutAttribute));
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
-            //event notification
-            _eventPublisher.EntityInserted(checkoutAttribute);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(checkoutAttribute);
+            }
         }
 
         /// <summary>
@@ -227,15 +231,19 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue, bool skipEventNotification = false)
         {
             if (checkoutAttributeValue == null)
                 throw new ArgumentNullException(nameof(checkoutAttributeValue));
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
-            //event notification
-            _eventPublisher.EntityInserted(checkoutAttributeValue);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(checkoutAttributeValue);
+            }
         }
 
         /// <summary>

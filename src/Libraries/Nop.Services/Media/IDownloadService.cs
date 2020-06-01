@@ -33,7 +33,8 @@ namespace Nop.Services.Media
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        void InsertDownload(Download download);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDownload(Download download, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the download

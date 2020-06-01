@@ -343,8 +343,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="picture">The picture object</param>
         /// <param name="binaryData">The picture binary data</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture binary</returns>
-        protected virtual PictureBinary UpdatePictureBinary(Picture picture, byte[] binaryData)
+        protected virtual PictureBinary UpdatePictureBinary(Picture picture, byte[] binaryData, bool skipEventNotification = false)
         {
             if (picture == null)
                 throw new ArgumentNullException(nameof(picture));
@@ -365,8 +366,11 @@ namespace Nop.Services.Media
             {
                 _pictureBinaryRepository.Insert(pictureBinary);
 
-                //event notification
-                _eventPublisher.EntityInserted(pictureBinary);
+                if (!skipEventNotification)
+                {
+                    //event notification
+                    _eventPublisher.EntityInserted(pictureBinary);
+                }
             }
             else
             {
@@ -532,15 +536,17 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(int pictureId,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
-            PictureType defaultPictureType = PictureType.Entity)
+            PictureType defaultPictureType = PictureType.Entity,
+            bool skipEventNotification = false)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(ref picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
+            return GetPictureUrl(ref picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType, skipEventNotification);
         }
 
         /// <summary>
@@ -551,12 +557,14 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture URL</returns>
         public virtual string GetPictureUrl(ref Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
-            PictureType defaultPictureType = PictureType.Entity)
+            PictureType defaultPictureType = PictureType.Entity,
+            bool skipEventNotification = false)
         {
             if (picture == null)
                 return showDefaultPicture ? GetDefaultPictureUrl(targetSize, defaultPictureType, storeLocation) : string.Empty;
@@ -578,7 +586,8 @@ namespace Nop.Services.Media
                     picture.AltAttribute,
                     picture.TitleAttribute,
                     false,
-                    false);
+                    false,
+                    skipEventNotification);
             }
 
             var seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
@@ -651,10 +660,11 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns></returns>
-        public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
+        public virtual string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true, bool skipEventNotification = false)
         {
-            var url = GetPictureUrl(ref picture, targetSize, showDefaultPicture);
+            var url = GetPictureUrl(ref picture, targetSize, showDefaultPicture, skipEventNotification: skipEventNotification);
             if (string.IsNullOrEmpty(url))
                 return string.Empty;
 
@@ -754,10 +764,11 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
         public virtual Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true)
+            bool isNew = true, bool validateBinary = true, bool skipEventNotification = false)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -776,13 +787,16 @@ namespace Nop.Services.Media
                 IsNew = isNew
             };
             _pictureRepository.Insert(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>(), skipEventNotification);
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
 
-            //event notification
-            _eventPublisher.EntityInserted(picture);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(picture);
+            }
 
             return picture;
         }
@@ -793,8 +807,9 @@ namespace Nop.Services.Media
         /// <param name="formFile">Form file</param>
         /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
         /// <param name="virtualPath">Virtual path</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        public virtual Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "")
+        public virtual Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "", bool skipEventNotification = false)
         {
             var imgExt = new List<string>
             {
@@ -860,7 +875,8 @@ namespace Nop.Services.Media
                 }
             }
 
-            var picture = InsertPicture(_downloadService.GetDownloadBits(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName));
+            var picture = InsertPicture(_downloadService.GetDownloadBits(formFile), contentType, _fileProvider.GetFileNameWithoutExtension(fileName),
+                skipEventNotification: skipEventNotification);
 
             if (string.IsNullOrEmpty(virtualPath))
                 return picture;
@@ -882,10 +898,11 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
         public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true)
+            bool isNew = true, bool validateBinary = true, bool skipEventNotification = false)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -910,7 +927,7 @@ namespace Nop.Services.Media
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>());
+            UpdatePictureBinary(picture, StoreInDb ? pictureBinary : Array.Empty<byte>(), skipEventNotification);
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
@@ -925,8 +942,9 @@ namespace Nop.Services.Media
         /// Updates the picture
         /// </summary>
         /// <param name="picture">The picture to update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        public virtual Picture UpdatePicture(Picture picture)
+        public virtual Picture UpdatePicture(Picture picture, bool skipEventNotification = false)
         {
             if (picture == null)
                 return null;
@@ -940,7 +958,7 @@ namespace Nop.Services.Media
             picture.SeoFilename = seoFilename;
 
             _pictureRepository.Update(picture);
-            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : Array.Empty<byte>());
+            UpdatePictureBinary(picture, StoreInDb ? GetPictureBinaryByPictureId(picture.Id).BinaryData : Array.Empty<byte>(), skipEventNotification);
 
             if (!StoreInDb)
                 SavePictureInFile(picture.Id, GetPictureBinaryByPictureId(picture.Id).BinaryData, picture.MimeType);
@@ -966,8 +984,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        public virtual Picture SetSeoFilename(int pictureId, string seoFilename)
+        public virtual Picture SetSeoFilename(int pictureId, string seoFilename, bool skipEventNotification = false)
         {
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -984,7 +1003,8 @@ namespace Nop.Services.Media
                     picture.AltAttribute,
                     picture.TitleAttribute,
                     true,
-                    false);
+                    false,
+                    skipEventNotification);
             }
 
             return picture;

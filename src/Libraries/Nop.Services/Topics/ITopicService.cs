@@ -55,7 +55,8 @@ namespace Nop.Services.Topics
         /// Inserts a topic
         /// </summary>
         /// <param name="topic">Topic</param>
-        void InsertTopic(Topic topic);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTopic(Topic topic, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the topic

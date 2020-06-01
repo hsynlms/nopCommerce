@@ -134,15 +134,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        public virtual void InsertProductAttribute(ProductAttribute productAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductAttribute(ProductAttribute productAttribute, bool skipEventNotification = false)
         {
             if (productAttribute == null)
                 throw new ArgumentNullException(nameof(productAttribute));
 
             _productAttributeRepository.Insert(productAttribute);
-           
-            //event notification
-            _eventPublisher.EntityInserted(productAttribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productAttribute);
+            }
         }
 
         /// <summary>
@@ -231,15 +235,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        public virtual void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping, bool skipEventNotification = false)
         {
             if (productAttributeMapping == null)
                 throw new ArgumentNullException(nameof(productAttributeMapping));
 
             _productAttributeMappingRepository.Insert(productAttributeMapping);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productAttributeMapping);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productAttributeMapping);
+            }
         }
 
         /// <summary>
@@ -311,15 +319,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        public virtual void InsertProductAttributeValue(ProductAttributeValue productAttributeValue)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductAttributeValue(ProductAttributeValue productAttributeValue, bool skipEventNotification = false)
         {
             if (productAttributeValue == null)
                 throw new ArgumentNullException(nameof(productAttributeValue));
 
             _productAttributeValueRepository.Insert(productAttributeValue);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productAttributeValue);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productAttributeValue);
+            }
         }
 
         /// <summary>
@@ -392,15 +404,19 @@ namespace Nop.Services.Catalog
         /// Inserts a predefined product attribute value
         /// </summary>
         /// <param name="ppav">The predefined product attribute value</param>
-        public virtual void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav, bool skipEventNotification = false)
         {
             if (ppav == null)
                 throw new ArgumentNullException(nameof(ppav));
 
             _predefinedProductAttributeValueRepository.Insert(ppav);
-            
-            //event notification
-            _eventPublisher.EntityInserted(ppav);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(ppav);
+            }
         }
 
         /// <summary>
@@ -495,15 +511,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        public virtual void InsertProductAttributeCombination(ProductAttributeCombination combination)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductAttributeCombination(ProductAttributeCombination combination, bool skipEventNotification = false)
         {
             if (combination == null)
                 throw new ArgumentNullException(nameof(combination));
 
             _productAttributeCombinationRepository.Insert(combination);
-            
-            //event notification
-            _eventPublisher.EntityInserted(combination);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(combination);
+            }
         }
 
         /// <summary>

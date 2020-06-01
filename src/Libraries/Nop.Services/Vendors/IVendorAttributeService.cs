@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Vendors
@@ -27,7 +27,8 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        void InsertVendorAttribute(VendorAttribute vendorAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertVendorAttribute(VendorAttribute vendorAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a vendor attribute
@@ -63,7 +64,8 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a vendor attribute value

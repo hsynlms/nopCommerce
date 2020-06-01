@@ -81,15 +81,19 @@ namespace Nop.Services.Media
         /// Inserts a download
         /// </summary>
         /// <param name="download">Download</param>
-        public virtual void InsertDownload(Download download)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDownload(Download download, bool skipEventNotification = false)
         {
             if (download == null)
                 throw new ArgumentNullException(nameof(download));
 
             _downloadRepository.Insert(download);
 
-            //event notification
-            _eventPubisher.EntityInserted(download);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPubisher.EntityInserted(download);
+            }
         }
 
         /// <summary>

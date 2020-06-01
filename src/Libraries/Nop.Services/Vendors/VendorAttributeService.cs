@@ -70,15 +70,19 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute
         /// </summary>
         /// <param name="vendorAttribute">Vendor attribute</param>
-        public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertVendorAttribute(VendorAttribute vendorAttribute, bool skipEventNotification = false)
         {
             if (vendorAttribute == null)
                 throw new ArgumentNullException(nameof(vendorAttribute));
 
             _vendorAttributeRepository.Insert(vendorAttribute);
 
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttribute);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(vendorAttribute);
+            }
         }
 
         /// <summary>
@@ -148,15 +152,19 @@ namespace Nop.Services.Vendors
         /// Inserts a vendor attribute value
         /// </summary>
         /// <param name="vendorAttributeValue">Vendor attribute value</param>
-        public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertVendorAttributeValue(VendorAttributeValue vendorAttributeValue, bool skipEventNotification = false)
         {
             if (vendorAttributeValue == null)
                 throw new ArgumentNullException(nameof(vendorAttributeValue));
 
             _vendorAttributeValueRepository.Insert(vendorAttributeValue);
 
-            //event notification
-            _eventPublisher.EntityInserted(vendorAttributeValue);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(vendorAttributeValue);
+            }
         }
 
         /// <summary>

@@ -93,7 +93,8 @@ namespace Nop.Services.Catalog
         /// Inserts a manufacturer
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
-        void InsertManufacturer(Manufacturer manufacturer);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertManufacturer(Manufacturer manufacturer, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the manufacturer
@@ -137,7 +138,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
-        void InsertProductManufacturer(ProductManufacturer productManufacturer);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductManufacturer(ProductManufacturer productManufacturer, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product manufacturer mapping
@@ -180,6 +182,7 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-manufacturer mapping record
         /// </summary>
         /// <param name="discountManufacturerMapping">Discount-manufacturer mapping</param>
-        void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscountManufacturerMapping(DiscountManufacturerMapping discountManufacturerMapping, bool skipEventNotification = false);
     }
 }

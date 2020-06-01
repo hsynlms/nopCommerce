@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog
@@ -31,7 +31,8 @@ namespace Nop.Services.Catalog
         /// Inserts category template
         /// </summary>
         /// <param name="categoryTemplate">Category template</param>
-        void InsertCategoryTemplate(CategoryTemplate categoryTemplate);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCategoryTemplate(CategoryTemplate categoryTemplate, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the category template

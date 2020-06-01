@@ -33,7 +33,8 @@ namespace Nop.Services.Catalog
         /// Insert the review type
         /// </summary>
         /// <param name="reviewType">Review type</param>
-        void InsertReviewType(ReviewType reviewType);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertReviewType(ReviewType reviewType, bool skipEventNotification = false);
 
         /// <summary>
         /// Update the review type
@@ -56,7 +57,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product review and review type mapping
         /// </summary>
         /// <param name="productReviewReviewType">Product review and review type mapping</param>
-        void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductReviewReviewTypeMappings(ProductReviewReviewTypeMapping productReviewReviewType, bool skipEventNotification = false);
 
         #endregion
     }

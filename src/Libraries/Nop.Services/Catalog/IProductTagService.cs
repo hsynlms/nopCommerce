@@ -67,13 +67,15 @@ namespace Nop.Services.Catalog
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
-        void InsertProductProductTagMapping(ProductProductTagMapping tagMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductProductTagMapping(ProductProductTagMapping tagMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        void InsertProductTag(ProductTag productTag);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductTag(ProductTag productTag, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product tag

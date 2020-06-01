@@ -57,7 +57,8 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual void DeleteLanguage(Language language)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void DeleteLanguage(Language language, bool skipEventNotification = false)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
@@ -71,7 +72,7 @@ namespace Nop.Services.Localization
                         continue;
 
                     _localizationSettings.DefaultAdminLanguageId = activeLanguage.Id;
-                    _settingService.SaveSetting(_localizationSettings);
+                    _settingService.SaveSetting(_localizationSettings, skipEventNotification: skipEventNotification);
                     break;
                 }
             }
@@ -132,15 +133,19 @@ namespace Nop.Services.Localization
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        public virtual void InsertLanguage(Language language)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertLanguage(Language language, bool skipEventNotification = false)
         {
             if (language == null)
                 throw new ArgumentNullException(nameof(language));
 
             _languageRepository.Insert(language);
 
-            //event notification
-            _eventPublisher.EntityInserted(language);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(language);
+            }
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Gdpr;
@@ -29,7 +29,8 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR consent
         /// </summary>
         /// <param name="gdprConsent">GDPR consent</param>
-        void InsertConsent(GdprConsent gdprConsent);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertConsent(GdprConsent gdprConsent, bool skipEventNotification = false);
 
         /// <summary>
         /// Update the GDPR consent
@@ -80,7 +81,8 @@ namespace Nop.Services.Gdpr
         /// Insert a GDPR log
         /// </summary>
         /// <param name="gdprLog">GDPR log</param>
-        void InsertLog(GdprLog gdprLog);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertLog(GdprLog gdprLog, bool skipEventNotification = false);
 
         /// <summary>
         /// Insert a GDPR log
@@ -89,7 +91,8 @@ namespace Nop.Services.Gdpr
         /// <param name="consentId">Consent identifier</param>
         /// <param name="requestType">Request type</param>
         /// <param name="requestDetails">Request details</param>
-        void InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertLog(Customer customer, int consentId, GdprRequestType requestType, string requestDetails, bool skipEventNotification = false);
 
         /// <summary>
         /// Update the GDPR log
@@ -111,7 +114,8 @@ namespace Nop.Services.Gdpr
         /// Permanent delete of customer
         /// </summary>
         /// <param name="customer">Customer</param>
-        void PermanentDeleteCustomer(Customer customer);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void PermanentDeleteCustomer(Customer customer, bool skipEventNotification = false);
 
         #endregion
     }

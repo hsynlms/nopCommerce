@@ -42,7 +42,8 @@ namespace Nop.Services.Directory
         /// Inserts a currency
         /// </summary>
         /// <param name="currency">Currency</param>
-        void InsertCurrency(Currency currency);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCurrency(Currency currency, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the currency

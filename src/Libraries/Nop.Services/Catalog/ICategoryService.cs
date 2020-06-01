@@ -102,7 +102,8 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        void InsertCategory(Category category);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCategory(Category category, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the category
@@ -134,7 +135,8 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
-        void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Deletes a discount-category mapping record
@@ -181,7 +183,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        void InsertProductCategory(ProductCategory productCategory);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductCategory(ProductCategory productCategory, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product category mapping 

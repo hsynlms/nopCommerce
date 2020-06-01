@@ -93,7 +93,8 @@ namespace Nop.Services.Configuration
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        protected virtual void SetSetting(Type type, string key, object value, int storeId = 0, bool clearCache = true, bool skipEventNotification = false)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -119,10 +120,10 @@ namespace Nop.Services.Configuration
                     Value = valueStr,
                     StoreId = storeId
                 };
-                InsertSetting(setting, clearCache);
+                InsertSetting(setting, clearCache, skipEventNotification);
             }
         }
-       
+
         #endregion
 
         #region Methods
@@ -132,7 +133,8 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="setting">Setting</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void InsertSetting(Setting setting, bool clearCache = true)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSetting(Setting setting, bool clearCache = true, bool skipEventNotification = false)
         {
             if (setting == null)
                 throw new ArgumentNullException(nameof(setting));
@@ -143,8 +145,11 @@ namespace Nop.Services.Configuration
             if (clearCache)
                 ClearCache();
 
-            //event notification
-            _eventPublisher.EntityInserted(setting);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(setting);
+            }
         }
 
         /// <summary>
@@ -284,9 +289,10 @@ namespace Nop.Services.Configuration
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true, bool skipEventNotification = false)
         {
-            SetSetting(typeof(T), key, value, storeId, clearCache);
+            SetSetting(typeof(T), key, value, storeId, clearCache, skipEventNotification);
         }
 
         /// <summary>
@@ -377,7 +383,8 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier</param>
         /// <param name="settings">Setting instance</param>
-        public virtual void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new()
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SaveSetting<T>(T settings, int storeId = 0, bool skipEventNotification = false) where T : ISettings, new()
         {
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -394,9 +401,9 @@ namespace Nop.Services.Configuration
                 var key = typeof(T).Name + "." + prop.Name;
                 var value = prop.GetValue(settings, null);
                 if (value != null)
-                    SetSetting(prop.PropertyType, key, value, storeId, false);
+                    SetSetting(prop.PropertyType, key, value, storeId, false, skipEventNotification);
                 else
-                    SetSetting(key, string.Empty, storeId, false);
+                    SetSetting(key, string.Empty, storeId, false, skipEventNotification);
             }
 
             //and now clear cache
@@ -412,9 +419,10 @@ namespace Nop.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            int storeId = 0, bool clearCache = true) where T : ISettings, new()
+            int storeId = 0, bool clearCache = true, bool skipEventNotification = false) where T : ISettings, new()
         {
             if (!(keySelector.Body is MemberExpression member))
             {
@@ -430,9 +438,9 @@ namespace Nop.Services.Configuration
             var key = GetSettingKey(settings, keySelector);
             var value = (TPropType)propInfo.GetValue(settings, null);
             if (value != null)
-                SetSetting(key, value, storeId, clearCache);
+                SetSetting(key, value, storeId, clearCache, skipEventNotification);
             else
-                SetSetting(key, string.Empty, storeId, clearCache);
+                SetSetting(key, string.Empty, storeId, clearCache, skipEventNotification);
         }
 
         /// <summary>
@@ -445,12 +453,13 @@ namespace Nop.Services.Configuration
         /// <param name="overrideForStore">A value indicating whether to setting is overridden in some store</param>
         /// <param name="storeId">Store ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void SaveSettingOverridablePerStore<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new()
+            bool overrideForStore, int storeId = 0, bool clearCache = true, bool skipEventNotification = false) where T : ISettings, new()
         {
             if (overrideForStore || storeId == 0)
-                SaveSetting(settings, keySelector, storeId, clearCache);
+                SaveSetting(settings, keySelector, storeId, clearCache, skipEventNotification);
             else if (storeId > 0)
                 DeleteSetting(settings, keySelector, storeId);
         }

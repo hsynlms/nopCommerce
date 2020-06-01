@@ -130,7 +130,10 @@ namespace Nop.Services.Media.RoxyFileman
                 var destinationPathVirtualPath =
                     $"{baseDestinationPathVirtualPath.TrimEnd('/')}{picture.VirtualPath.Replace(_fileProvider.GetVirtualPath(sourcePath), "")}";
 
-                _pictureService.InsertPicture(new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty, destinationPathVirtualPath);
+                _pictureService.InsertPicture(
+                    new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id),
+                        _pictureService.GetFileExtensionFromMimeType(picture.MimeType)), string.Empty,
+                    destinationPathVirtualPath, skipEventNotification);
             }
         }
 
@@ -270,7 +273,8 @@ namespace Nop.Services.Media.RoxyFileman
                     picture.AltAttribute,
                     picture.TitleAttribute,
                     false,
-                    false);
+                    false,
+                    skipEventNotification);
             }
 
             //the named mutex helps to avoid creating the same files in different threads,
@@ -357,7 +361,7 @@ namespace Nop.Services.Media.RoxyFileman
 
                 _pictureService.InsertPicture(
                     new RoxyFilemanFormFile(picture, new PictureBinary { BinaryData = _fileProvider.ReadAllBytes(filePath) },  _fileProvider.GetFileExtension(filePath)),
-                    string.Empty, _fileProvider.GetVirtualPath(filePath));
+                    string.Empty, _fileProvider.GetVirtualPath(filePath), skipEventNotification);
             }
         }
 
@@ -385,7 +389,7 @@ namespace Nop.Services.Media.RoxyFileman
 
                 picture.VirtualPath = destinationPathVirtualPath;
 
-                _pictureService.UpdatePicture(picture);
+                _pictureService.UpdatePicture(picture, skipEventNotification);
             }
         }
 
@@ -407,7 +411,7 @@ namespace Nop.Services.Media.RoxyFileman
             {
                 picture.VirtualPath = destinationPath;
 
-                _pictureService.UpdatePicture(picture);
+                _pictureService.UpdatePicture(picture, skipEventNotification);
             }
 
             await base.RenameDirectoryAsync(sourcePath, newName);
@@ -433,7 +437,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             _pictureService.InsertPicture(
                 new RoxyFilemanFormFile(picture, _pictureService.GetPictureBinaryByPictureId(picture.Id), _fileProvider.GetFileExtension(filePath)),
-                string.Empty, _fileProvider.GetVirtualPath(destinationPath));
+                string.Empty, _fileProvider.GetVirtualPath(destinationPath), skipEventNotification);
 
             await GetHttpContext().Response.WriteAsync(GetSuccessResponse());
         }
@@ -473,7 +477,7 @@ namespace Nop.Services.Media.RoxyFileman
                 throw new Exception(GetLanguageResource("E_MoveFile"));
 
             picture.VirtualPath = _fileProvider.GetVirtualPath(_fileProvider.GetVirtualPath(_fileProvider.GetDirectoryName(destinationPath)));
-            _pictureService.UpdatePicture(picture);
+            _pictureService.UpdatePicture(picture, skipEventNotification);
         }
 
         /// <summary>
@@ -492,7 +496,7 @@ namespace Nop.Services.Media.RoxyFileman
 
             picture.SeoFilename = _fileProvider.GetFileNameWithoutExtension(newName);
 
-            _pictureService.UpdatePicture(picture);
+            _pictureService.UpdatePicture(picture, skipEventNotification);
 
             await base.DeleteFileAsync(sourcePath);
         }
@@ -531,7 +535,7 @@ namespace Nop.Services.Media.RoxyFileman
                         }
                         else
                         {
-                            _pictureService.InsertPicture(formFile, virtualPath: GetVirtualPath(directoryPath));
+                            _pictureService.InsertPicture(formFile, virtualPath: GetVirtualPath(directoryPath), skipEventNotification);
                         }
                     }
                     else

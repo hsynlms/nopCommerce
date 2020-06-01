@@ -1191,15 +1191,19 @@ namespace Nop.Services.Seo
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        public virtual void InsertUrlRecord(UrlRecord urlRecord)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertUrlRecord(UrlRecord urlRecord, bool skipEventNotification = false)
         {
             if (urlRecord == null)
                 throw new ArgumentNullException(nameof(urlRecord));
 
             _urlRecordRepository.Insert(urlRecord);
 
-            //event notification
-            _eventPublisher.EntityInserted(urlRecord);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(urlRecord);
+            }
         }
 
         /// <summary>
@@ -1344,7 +1348,8 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        public virtual void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SaveSlug<T>(T entity, string slug, int languageId, bool skipEventNotification = false) where T : BaseEntity, ISlugSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -1385,7 +1390,7 @@ namespace Nop.Services.Seo
                         LanguageId = languageId,
                         IsActive = true
                     };
-                    InsertUrlRecord(urlRecord);
+                    InsertUrlRecord(urlRecord, skipEventNotification);
                 }
             }
 
@@ -1429,7 +1434,7 @@ namespace Nop.Services.Seo
                     LanguageId = languageId,
                     IsActive = true
                 };
-                InsertUrlRecord(urlRecord);
+                InsertUrlRecord(urlRecord, skipEventNotification);
 
                 //disable the previous active URL record
                 activeUrlRecord.IsActive = false;

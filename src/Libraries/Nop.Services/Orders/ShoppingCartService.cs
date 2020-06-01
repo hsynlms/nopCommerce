@@ -211,8 +211,9 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true,
-            bool ensureOnlyActiveCheckoutAttributes = false)
+            bool ensureOnlyActiveCheckoutAttributes = false, bool skipEventNotification = false)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException(nameof(shoppingCartItem));
@@ -273,7 +274,7 @@ namespace Nop.Services.Orders
 
                 UpdateShoppingCartItem(customer, cartItem.Id, cartItem.AttributesXml, cartItem.CustomerEnteredPrice,
                     quantity: cartItem.Quantity - shoppingCartItem.Quantity * requiredProductQuantity,
-                    resetCheckoutData: false);
+                    resetCheckoutData: false, skipEventNotification: skipEventNotification);
             }
         }
 
@@ -283,20 +284,22 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart item ID</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void DeleteShoppingCartItem(int shoppingCartItemId, bool resetCheckoutData = true,
-            bool ensureOnlyActiveCheckoutAttributes = false)
+            bool ensureOnlyActiveCheckoutAttributes = false, bool skipEventNotification = false)
         {
             var shoppingCartItem = _sciRepository.Table.FirstOrDefault(sci => sci.Id == shoppingCartItemId);
             if (shoppingCartItem != null)
-                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes);
+                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, ensureOnlyActiveCheckoutAttributes, skipEventNotification);
         }
 
         /// <summary>
         /// Deletes expired shopping cart items
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Number of deleted items</returns>
-        public virtual int DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
+        public virtual int DeleteExpiredShoppingCartItems(DateTime olderThanUtc, bool skipEventNotification = false)
         {
             var query = from sci in _sciRepository.Table
                         where sci.UpdatedOnUtc < olderThanUtc
@@ -304,7 +307,7 @@ namespace Nop.Services.Orders
 
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)
-                DeleteShoppingCartItem(cartItem);
+                DeleteShoppingCartItem(cartItem, skipEventNotification: skipEventNotification);
             return cartItems.Count;
         }
 
@@ -346,9 +349,10 @@ namespace Nop.Services.Orders
         /// <param name="quantity">Quantity</param>
         /// <param name="addRequiredProducts">Whether to add required products</param>
         /// <param name="shoppingCartItemId">Shopping cart identifier; pass 0 if it's a new item</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetRequiredProductWarnings(Customer customer, ShoppingCartType shoppingCartType, Product product,
-            int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId)
+            int storeId, int quantity, bool addRequiredProducts, int shoppingCartItemId, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -412,7 +416,7 @@ namespace Nop.Services.Orders
                 {
                     //do not add required products to prevent circular references
                     var addToCartWarnings = AddToCart(customer, requiredProduct, shoppingCartType, storeId,
-                        quantity: quantityToAdd, addRequiredProducts: false);
+                        quantity: quantityToAdd, addRequiredProducts: false, skipEventNotification: skipEventNotification);
 
                     //don't display all specific errors only the generic one
                     if (addToCartWarnings.Any())
@@ -678,6 +682,7 @@ namespace Nop.Services.Orders
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <param name="ignoreConditionMet">A value indicating whether we should ignore filtering by "is condition met" property</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer,
             ShoppingCartType shoppingCartType,
@@ -685,7 +690,8 @@ namespace Nop.Services.Orders
             int quantity = 1,
             string attributesXml = "",
             bool ignoreNonCombinableAttributes = false,
-            bool ignoreConditionMet = false)
+            bool ignoreConditionMet = false,
+            bool skipEventNotification = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -852,7 +858,8 @@ namespace Nop.Services.Orders
                     var totalQty = quantity * attributeValue.Quantity;
                     var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                         shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                        string.Empty, decimal.Zero, null, null, totalQty, false);
+                        string.Empty, decimal.Zero, null, null,
+                        totalQty, false, skipEventNotification: skipEventNotification);
 
                     var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeMapping.ProductAttributeId);
 
@@ -992,6 +999,7 @@ namespace Nop.Services.Orders
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
         /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
             Product product, int storeId,
@@ -1000,7 +1008,7 @@ namespace Nop.Services.Orders
             int quantity = 1, bool addRequiredProducts = true, int shoppingCartItemId = 0,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
             bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
-            bool getRentalWarnings = true)
+            bool getRentalWarnings = true, bool skipEventNotification = false)
         {
             if (product == null)
                 throw new ArgumentNullException(nameof(product));
@@ -1013,7 +1021,7 @@ namespace Nop.Services.Orders
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, attributesXml));
+                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, attributesXml, skipEventNotification: skipEventNotification));
 
             //gift cards
             if (getGiftCardWarnings)
@@ -1021,7 +1029,7 @@ namespace Nop.Services.Orders
 
             //required products
             if (getRequiredProductWarnings)
-                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, quantity, addRequiredProducts, shoppingCartItemId));
+                warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, quantity, addRequiredProducts, shoppingCartItemId, skipEventNotification));
 
             //rental products
             if (getRentalWarnings)
@@ -1435,12 +1443,13 @@ namespace Nop.Services.Orders
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="addRequiredProducts">Whether to add required products</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
             ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool addRequiredProducts = true)
+            int quantity = 1, bool addRequiredProducts = true, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1489,7 +1498,8 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml,
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
-                    newQuantity, addRequiredProducts, shoppingCartItem.Id));
+                    newQuantity, addRequiredProducts, shoppingCartItem.Id,
+                    skipEventNotification: skipEventNotification));
 
                 if (warnings.Any())
                     return warnings;
@@ -1509,7 +1519,8 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate,
-                    quantity, addRequiredProducts));
+                    quantity, addRequiredProducts,
+                    skipEventNotification: skipEventNotification));
 
                 if (warnings.Any())
                     return warnings;
@@ -1560,8 +1571,11 @@ namespace Nop.Services.Orders
 
                 _customerService.UpdateCustomer(customer);
 
-                //event notification
-                _eventPublisher.EntityInserted(shoppingCartItem);
+                if (!skipEventNotification)
+                {
+                    //event notification
+                    _eventPublisher.EntityInserted(shoppingCartItem);
+                }
             }
 
             return warnings;
@@ -1578,12 +1592,13 @@ namespace Nop.Services.Orders
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> UpdateShoppingCartItem(Customer customer,
             int shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
-            int quantity = 1, bool resetCheckoutData = true)
+            int quantity = 1, bool resetCheckoutData = true, bool skipEventNotification = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
@@ -1609,7 +1624,8 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
                     product, shoppingCartItem.StoreId,
                     attributesXml, customerEnteredPrice,
-                    rentalStartDate, rentalEndDate, quantity, false, shoppingCartItemId));
+                    rentalStartDate, rentalEndDate, quantity, false,
+                    shoppingCartItemId, skipEventNotification: skipEventNotification));
                 if (warnings.Any())
                     return warnings;
 
@@ -1631,12 +1647,12 @@ namespace Nop.Services.Orders
             {
                 //check warnings for required products
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartItem.ShoppingCartType,
-                    product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId));
+                    product, shoppingCartItem.StoreId, quantity, false, shoppingCartItemId, skipEventNotification));
                 if (warnings.Any())
                     return warnings;
 
                 //delete a shopping cart item
-                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
+                DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true, skipEventNotification);
             }
 
             return warnings;
@@ -1648,7 +1664,8 @@ namespace Nop.Services.Orders
         /// <param name="fromCustomer">From customer</param>
         /// <param name="toCustomer">To customer</param>
         /// <param name="includeCouponCodes">A value indicating whether to coupon codes (discount and gift card) should be also re-applied</param>
-        public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void MigrateShoppingCart(Customer fromCustomer, Customer toCustomer, bool includeCouponCodes, bool skipEventNotification = false)
         {
             if (fromCustomer == null)
                 throw new ArgumentNullException(nameof(fromCustomer));
@@ -1668,13 +1685,14 @@ namespace Nop.Services.Orders
 
                 AddToCart(toCustomer, product, sci.ShoppingCartType, sci.StoreId,
                     sci.AttributesXml, sci.CustomerEnteredPrice,
-                    sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
+                    sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, 
+                    false, skipEventNotification);
             }
 
             for (var i = 0; i < fromCart.Count; i++)
             {
                 var sci = fromCart[i];
-                DeleteShoppingCartItem(sci);
+                DeleteShoppingCartItem(sci, skipEventNotification: skipEventNotification);
             }
 
             //copy discount and gift card coupon codes

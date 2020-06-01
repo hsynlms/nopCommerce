@@ -86,15 +86,19 @@ namespace Nop.Services.Stores
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        public virtual void InsertStore(Store store)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertStore(Store store, bool skipEventNotification = false)
         {
             if (store == null)
                 throw new ArgumentNullException(nameof(store));
 
             _storeRepository.Insert(store);
 
-            //event notification
-            _eventPublisher.EntityInserted(store);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(store);
+            }
         }
 
         /// <summary>

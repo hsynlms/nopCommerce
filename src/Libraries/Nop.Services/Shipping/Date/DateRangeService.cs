@@ -73,15 +73,19 @@ namespace Nop.Services.Shipping.Date
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        public virtual void InsertDeliveryDate(DeliveryDate deliveryDate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDeliveryDate(DeliveryDate deliveryDate, bool skipEventNotification = false)
         {
             if (deliveryDate == null)
                 throw new ArgumentNullException(nameof(deliveryDate));
 
             _deliveryDateRepository.Insert(deliveryDate);
 
-            //event notification
-            _eventPublisher.EntityInserted(deliveryDate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(deliveryDate);
+            }
         }
 
         /// <summary>
@@ -145,15 +149,19 @@ namespace Nop.Services.Shipping.Date
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        public virtual void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange, bool skipEventNotification = false)
         {
             if (productAvailabilityRange == null)
                 throw new ArgumentNullException(nameof(productAvailabilityRange));
 
             _productAvailabilityRangeRepository.Insert(productAvailabilityRange);
 
-            //event notification
-            _eventPublisher.EntityInserted(productAvailabilityRange);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productAvailabilityRange);
+            }
         }
 
         /// <summary>

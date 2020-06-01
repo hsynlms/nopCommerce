@@ -160,15 +160,19 @@ namespace Nop.Services.Directory
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        public virtual void InsertStateProvince(StateProvince stateProvince)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertStateProvince(StateProvince stateProvince, bool skipEventNotification = false)
         {
             if (stateProvince == null)
                 throw new ArgumentNullException(nameof(stateProvince));
 
             _stateProvinceRepository.Insert(stateProvince);
 
-            //event notification
-            _eventPublisher.EntityInserted(stateProvince);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(stateProvince);
+            }
         }
 
         /// <summary>

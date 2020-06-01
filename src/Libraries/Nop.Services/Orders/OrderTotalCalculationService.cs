@@ -479,7 +479,7 @@ namespace Nop.Services.Orders
                                     updatedOrder.ShippingMethod = shippingOption.Name;
 
                                     var updatedShippingAddress = _addressService.CloneAddress(customerShippingAddress);
-                                    _addressService.InsertAddress(updatedShippingAddress);
+                                    _addressService.InsertAddress(updatedShippingAddress, skipEventNotification);
                                     updatedOrder.ShippingAddressId = updatedShippingAddress.Id;
 
                                     shippingTotal = shippingOption.Rate;
@@ -659,7 +659,7 @@ namespace Nop.Services.Orders
             if (!useRewardPoints.Value)
                 return;
 
-            var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
+            var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id, skipEventNotification);
             rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
 
             if (!CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Topics;
 
 namespace Nop.Services.Topics
@@ -31,7 +31,8 @@ namespace Nop.Services.Topics
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        void InsertTopicTemplate(TopicTemplate topicTemplate);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTopicTemplate(TopicTemplate topicTemplate, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the topic template

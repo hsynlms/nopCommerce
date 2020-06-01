@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Stores;
 
@@ -36,7 +36,8 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
-        void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported;
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertStoreMapping<T>(T entity, int storeId, bool skipEventNotification = false) where T : BaseEntity, IStoreMappingSupported;
 
         /// <summary>
         /// Find store identifiers with granted access (mapped to the entity)

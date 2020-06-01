@@ -47,7 +47,8 @@ namespace Nop.Services.Orders
         /// Inserts a gift card
         /// </summary>
         /// <param name="giftCard">Gift card</param>
-        void InsertGiftCard(GiftCard giftCard);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertGiftCard(GiftCard giftCard, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the gift card
@@ -106,7 +107,8 @@ namespace Nop.Services.Orders
         /// Inserts a gift card usage history entry
         /// </summary>
         /// <param name="giftCardUsageHistory">Gift card usage history entry</param>
-        void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertGiftCardUsageHistory(GiftCardUsageHistory giftCardUsageHistory, bool skipEventNotification = false);
 
         /// <summary>
         /// Is gift card valid

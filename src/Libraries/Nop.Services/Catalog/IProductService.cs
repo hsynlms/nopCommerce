@@ -52,7 +52,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product
         /// </summary>
         /// <param name="product">Product</param>
-        void InsertProduct(Product product);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProduct(Product product, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product
@@ -475,7 +476,8 @@ namespace Nop.Services.Catalog
         /// Inserts a related product
         /// </summary>
         /// <param name="relatedProduct">Related product</param>
-        void InsertRelatedProduct(RelatedProduct relatedProduct);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertRelatedProduct(RelatedProduct relatedProduct, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a related product
@@ -529,7 +531,8 @@ namespace Nop.Services.Catalog
         /// Inserts a cross-sell product
         /// </summary>
         /// <param name="crossSellProduct">Cross-sell product</param>
-        void InsertCrossSellProduct(CrossSellProduct crossSellProduct);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCrossSellProduct(CrossSellProduct crossSellProduct, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a cross-sell product
@@ -589,7 +592,8 @@ namespace Nop.Services.Catalog
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>
-        void InsertTierPrice(TierPrice tierPrice);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTierPrice(TierPrice tierPrice, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the tier price
@@ -635,7 +639,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product picture
         /// </summary>
         /// <param name="productPicture">Product picture</param>
-        void InsertProductPicture(ProductPicture productPicture);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductPicture(ProductPicture productPicture, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a product picture
@@ -703,7 +708,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
-        void InsertProductReview(ProductReview productReview);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductReview(ProductReview productReview, bool skipEventNotification = false);
 
         /// <summary>
         /// Deletes a product review
@@ -728,14 +734,16 @@ namespace Nop.Services.Catalog
         /// Inserts a product review helpfulness record
         /// </summary>
         /// <param name="productReviewHelpfulness">Product review helpfulness record</param>
-        void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductReviewHelpfulness(ProductReviewHelpfulness productReviewHelpfulness, bool skipEventNotification = false);
 
         /// <summary>
         /// Sets or create a product review helpfulness record
         /// </summary>
         /// <param name="productReview">Product reviews</param>
         /// <param name="helpfulness">Value indicating whether a review a helpful</param>
-        void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SetProductReviewHelpfulness(ProductReview productReview, bool helpfulness, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a totals helpfulness count for product review
@@ -784,7 +792,8 @@ namespace Nop.Services.Catalog
         /// Inserts a ProductWarehouseInventory
         /// </summary>
         /// <param name="pwi">ProductWarehouseInventory</param>
-        void InsertProductWarehouseInventory(ProductWarehouseInventory pwi);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductWarehouseInventory(ProductWarehouseInventory pwi, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a record to manage product inventory per warehouse
@@ -805,8 +814,9 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier</param>
         /// <param name="message">Message</param>
         /// <param name="combinationId">Product attribute combination identifier</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         void AddStockQuantityHistoryEntry(Product product, int quantityAdjustment, int stockQuantity,
-            int warehouseId = 0, string message = "", int? combinationId = null);
+            int warehouseId = 0, string message = "", int? combinationId = null, bool skipEventNotification = false);
 
         /// <summary>
         /// Get the history of the product stock quantity changes
@@ -848,7 +858,8 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-product mapping record
         /// </summary>
         /// <param name="discountProductMapping">Discount-product mapping</param>
-        void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscountProductMapping(DiscountProductMapping discountProductMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Deletes a discount-product mapping record

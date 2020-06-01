@@ -49,7 +49,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute
         /// </summary>
         /// <param name="productAttribute">Product attribute</param>
-        void InsertProductAttribute(ProductAttribute productAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductAttribute(ProductAttribute productAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product attribute
@@ -92,7 +93,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute mapping
         /// </summary>
         /// <param name="productAttributeMapping">The product attribute mapping</param>
-        void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product attribute mapping
@@ -128,7 +130,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute value
         /// </summary>
         /// <param name="productAttributeValue">The product attribute value</param>
-        void InsertProductAttributeValue(ProductAttributeValue productAttributeValue);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductAttributeValue(ProductAttributeValue productAttributeValue, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product attribute value
@@ -164,7 +167,8 @@ namespace Nop.Services.Catalog
         /// Inserts a predefined product attribute value
         /// </summary>
         /// <param name="ppav">The predefined product attribute value</param>
-        void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the predefined product attribute value
@@ -207,7 +211,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
-        void InsertProductAttributeCombination(ProductAttributeCombination combination);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductAttributeCombination(ProductAttributeCombination combination, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a product attribute combination

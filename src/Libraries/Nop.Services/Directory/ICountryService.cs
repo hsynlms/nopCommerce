@@ -78,7 +78,8 @@ namespace Nop.Services.Directory
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        void InsertCountry(Country country);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCountry(Country country, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the country

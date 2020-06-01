@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping.Date
@@ -33,7 +33,8 @@ namespace Nop.Services.Shipping.Date
         /// Insert a delivery date
         /// </summary>
         /// <param name="deliveryDate">Delivery date</param>
-        void InsertDeliveryDate(DeliveryDate deliveryDate);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDeliveryDate(DeliveryDate deliveryDate, bool skipEventNotification = false);
 
         /// <summary>
         /// Update the delivery date
@@ -62,7 +63,8 @@ namespace Nop.Services.Shipping.Date
         /// Insert the product availability range
         /// </summary>
         /// <param name="productAvailabilityRange">Product availability range</param>
-        void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductAvailabilityRange(ProductAvailabilityRange productAvailabilityRange, bool skipEventNotification = false);
 
         /// <summary>
         /// Update the product availability range

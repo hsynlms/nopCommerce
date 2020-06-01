@@ -59,7 +59,8 @@ namespace Nop.Services.Configuration
         /// <param name="value">Value</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
-        void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SetSetting<T>(string key, T value, int storeId = 0, bool clearCache = true, bool skipEventNotification = false);
 
         /// <summary>
         /// Gets all settings
@@ -100,7 +101,8 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store identifier</param>
         /// <param name="settings">Setting instance</param>
-        void SaveSetting<T>(T settings, int storeId = 0) where T : ISettings, new();
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SaveSetting<T>(T settings, int storeId = 0, bool skipEventNotification = false) where T : ISettings, new();
 
         /// <summary>
         /// Save settings object
@@ -111,9 +113,10 @@ namespace Nop.Services.Configuration
         /// <param name="keySelector">Key selector</param>
         /// <param name="storeId">Store ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         void SaveSetting<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            int storeId = 0, bool clearCache = true) where T : ISettings, new();
+            int storeId = 0, bool clearCache = true, bool skipEventNotification = false) where T : ISettings, new();
 
         /// <summary>
         /// Save settings object (per store). If the setting is not overridden per store then it'll be delete
@@ -125,9 +128,10 @@ namespace Nop.Services.Configuration
         /// <param name="overrideForStore">A value indicating whether to setting is overridden in some store</param>
         /// <param name="storeId">Store ID</param>
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         void SaveSettingOverridablePerStore<T, TPropType>(T settings,
             Expression<Func<T, TPropType>> keySelector,
-            bool overrideForStore, int storeId = 0, bool clearCache = true) where T : ISettings, new();
+            bool overrideForStore, int storeId = 0, bool clearCache = true, bool skipEventNotification = false) where T : ISettings, new();
 
         /// <summary>
         /// Delete all settings

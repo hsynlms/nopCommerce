@@ -249,7 +249,7 @@ namespace Nop.Services.Customers
                     break;
             }
 
-            _customerService.InsertCustomerPassword(customerPassword);
+            _customerService.InsertCustomerPassword(customerPassword, skipEventNotification);
 
             request.Customer.Active = request.IsApproved;
 
@@ -258,7 +258,7 @@ namespace Nop.Services.Customers
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
 
-            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id });
+            _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = request.Customer.Id, CustomerRoleId = registeredRole.Id }, skipEventNotification);
 
             //remove from 'Guests' role            
             if (_customerService.IsGuest(request.Customer))
@@ -273,7 +273,8 @@ namespace Nop.Services.Customers
                 var endDate = _rewardPointsSettings.RegistrationPointsValidity > 0
                     ? (DateTime?)DateTime.UtcNow.AddDays(_rewardPointsSettings.RegistrationPointsValidity.Value) : null;
                 _rewardPointService.AddRewardPointsHistoryEntry(request.Customer, _rewardPointsSettings.PointsForRegistration,
-                    request.StoreId, _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), endDate: endDate);
+                    request.StoreId, _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"), endDate: endDate,
+                    skipEventNotification: skipEventNotification);
             }
 
             _customerService.UpdateCustomer(request.Customer);
@@ -355,7 +356,7 @@ namespace Nop.Services.Customers
                     break;
             }
 
-            _customerService.InsertCustomerPassword(customerPassword);
+            _customerService.InsertCustomerPassword(customerPassword, skipEventNotification);
 
             //publish event
             _eventPublisher.Publish(new CustomerPasswordChangedEvent(customerPassword));

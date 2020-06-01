@@ -109,15 +109,19 @@ namespace Nop.Services.Directory
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        public virtual void InsertMeasureDimension(MeasureDimension measure)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertMeasureDimension(MeasureDimension measure, bool skipEventNotification = false)
         {
             if (measure == null)
                 throw new ArgumentNullException(nameof(measure));
 
             _measureDimensionRepository.Insert(measure);
 
-            //event notification
-            _eventPublisher.EntityInserted(measure);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(measure);
+            }
         }
 
         /// <summary>
@@ -282,15 +286,19 @@ namespace Nop.Services.Directory
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        public virtual void InsertMeasureWeight(MeasureWeight measure)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertMeasureWeight(MeasureWeight measure, bool skipEventNotification = false)
         {
             if (measure == null)
                 throw new ArgumentNullException(nameof(measure));
 
             _measureWeightRepository.Insert(measure);
 
-            //event notification
-            _eventPublisher.EntityInserted(measure);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(measure);
+            }
         }
 
         /// <summary>

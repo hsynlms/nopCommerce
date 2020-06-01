@@ -159,15 +159,19 @@ namespace Nop.Services.Catalog
         /// Inserts subscription
         /// </summary>
         /// <param name="subscription">Subscription</param>
-        public virtual void InsertSubscription(BackInStockSubscription subscription)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSubscription(BackInStockSubscription subscription, bool skipEventNotification = false)
         {
             if (subscription == null)
                 throw new ArgumentNullException(nameof(subscription));
 
             _backInStockSubscriptionRepository.Insert(subscription);
 
-            //event notification
-            _eventPublisher.EntityInserted(subscription);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(subscription);
+            }
         }
 
         /// <summary>

@@ -44,7 +44,8 @@ namespace Nop.Services.Discounts
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        void InsertDiscount(Discount discount);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscount(Discount discount, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the discount
@@ -125,7 +126,8 @@ namespace Nop.Services.Discounts
         /// Inserts a discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        void InsertDiscountRequirement(DiscountRequirement discountRequirement);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscountRequirement(DiscountRequirement discountRequirement, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a discount requirement
@@ -182,7 +184,8 @@ namespace Nop.Services.Discounts
         /// Insert discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory, bool skipEventNotification = false);
 
         /// <summary>
         /// Update discount usage history record

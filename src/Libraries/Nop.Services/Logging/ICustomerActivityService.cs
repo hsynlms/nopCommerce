@@ -15,7 +15,8 @@ namespace Nop.Services.Logging
         /// Inserts an activity log type item
         /// </summary>
         /// <param name="activityLogType">Activity log type item</param>
-        void InsertActivityType(ActivityLogType activityLogType);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertActivityType(ActivityLogType activityLogType, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates an activity log type item
@@ -48,8 +49,9 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, string comment, BaseEntity entity = null);
+        ActivityLog InsertActivity(string systemKeyword, string comment, BaseEntity entity = null, bool skipEventNotification = false);
 
         /// <summary>
         /// Inserts an activity log item
@@ -58,8 +60,9 @@ namespace Nop.Services.Logging
         /// <param name="systemKeyword">System keyword</param>
         /// <param name="comment">Comment</param>
         /// <param name="entity">Entity</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, BaseEntity entity = null);
+        ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, BaseEntity entity = null, bool skipEventNotification = false);
 
         /// <summary>
         /// Deletes an activity log item

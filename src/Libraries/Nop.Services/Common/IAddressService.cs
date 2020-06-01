@@ -39,7 +39,8 @@ namespace Nop.Services.Common
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
-        void InsertAddress(Address address);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAddress(Address address, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the address

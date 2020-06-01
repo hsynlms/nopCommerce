@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Tax
@@ -31,7 +31,8 @@ namespace Nop.Services.Tax
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        void InsertTaxCategory(TaxCategory taxCategory);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTaxCategory(TaxCategory taxCategory, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the tax category

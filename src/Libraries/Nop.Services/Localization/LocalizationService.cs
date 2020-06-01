@@ -74,7 +74,8 @@ namespace Nop.Services.Localization
         /// Insert resources
         /// </summary>
         /// <param name="resources">Resources</param>
-        protected virtual void InsertLocaleStringResources(IList<LocaleStringResource> resources)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        protected virtual void InsertLocaleStringResources(IList<LocaleStringResource> resources, bool skipEventNotification = false)
         {
             if (resources == null)
                 throw new ArgumentNullException(nameof(resources));
@@ -82,10 +83,13 @@ namespace Nop.Services.Localization
             //insert
             _lsrRepository.Insert(resources);
 
-            //event notification
-            foreach (var resource in resources)
+            if (!skipEventNotification)
             {
-                _eventPublisher.EntityInserted(resource);
+                //event notification
+                foreach (var resource in resources)
+                {
+                    _eventPublisher.EntityInserted(resource);
+                }
             }
         }
 
@@ -236,15 +240,19 @@ namespace Nop.Services.Localization
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        public virtual void InsertLocaleStringResource(LocaleStringResource localeStringResource)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertLocaleStringResource(LocaleStringResource localeStringResource, bool skipEventNotification = false)
         {
             if (localeStringResource == null)
                 throw new ArgumentNullException(nameof(localeStringResource));
 
             _lsrRepository.Insert(localeStringResource);
 
-            //event notification
-            _eventPublisher.EntityInserted(localeStringResource);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(localeStringResource);
+            }
         }
 
         /// <summary>
@@ -565,9 +573,10 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="value">Localized value</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Localized property</returns>
         public virtual void SaveLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
-            int languageId, string value) where TSettings : ISettings, new()
+            int languageId, string value, bool skipEventNotification = false) where TSettings : ISettings, new()
         {
             var key = _settingService.GetSettingKey(settings, keySelector);
 
@@ -576,7 +585,7 @@ namespace Nop.Services.Localization
             if (setting == null)
                 return;
 
-            _localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId);
+            _localizedEntityService.SaveLocalizedValue(setting, x => x.Value, value, languageId, skipEventNotification);
         }
 
         /// <summary>
@@ -629,7 +638,8 @@ namespace Nop.Services.Localization
         /// Save localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        public virtual void SaveLocalizedPermissionName(PermissionRecord permissionRecord)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SaveLocalizedPermissionName(PermissionRecord permissionRecord, bool skipEventNotification = false)
         {
             if (permissionRecord == null)
                 throw new ArgumentNullException(nameof(permissionRecord));
@@ -648,7 +658,7 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    InsertLocaleStringResource(lsr);
+                    InsertLocaleStringResource(lsr, skipEventNotification);
                 }
                 else
                 {
@@ -682,7 +692,8 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        public virtual void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null, bool skipEventNotification = false)
         {
             foreach (var lang in _languageService.GetAllLanguages(true))
             {
@@ -698,7 +709,7 @@ namespace Nop.Services.Localization
                         ResourceName = resourceName,
                         ResourceValue = resourceValue
                     };
-                    InsertLocaleStringResource(lsr);
+                    InsertLocaleStringResource(lsr, skipEventNotification);
                 }
                 else
                 {
@@ -813,7 +824,8 @@ namespace Nop.Services.Localization
         /// <param name="plugin">Plugin</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        public virtual void SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName, bool skipEventNotification = false)
             where TPlugin : IPlugin
         {
             if (languageId == 0)
@@ -856,7 +868,7 @@ namespace Nop.Services.Localization
                     ResourceName = resourceName,
                     ResourceValue = localizedFriendlyName
                 };
-                InsertLocaleStringResource(resource);
+                InsertLocaleStringResource(resource, skipEventNotification);
             }
         }
 

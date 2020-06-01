@@ -55,7 +55,8 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute
         /// </summary>
         /// <param name="specificationAttribute">The specification attribute</param>
-        void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertSpecificationAttribute(SpecificationAttribute specificationAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the specification attribute
@@ -98,7 +99,8 @@ namespace Nop.Services.Catalog
         /// Inserts a specification attribute option
         /// </summary>
         /// <param name="specificationAttributeOption">The specification attribute option</param>
-        void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertSpecificationAttributeOption(SpecificationAttributeOption specificationAttributeOption, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the specification attribute
@@ -145,7 +147,8 @@ namespace Nop.Services.Catalog
         /// Inserts a product specification attribute mapping
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
-        void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the product specification attribute mapping

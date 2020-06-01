@@ -48,7 +48,8 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
-        void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCheckoutAttribute(CheckoutAttribute checkoutAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the checkout attribute
@@ -84,7 +85,8 @@ namespace Nop.Services.Orders
         /// Inserts a checkout attribute value
         /// </summary>
         /// <param name="checkoutAttributeValue">Checkout attribute value</param>
-        void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertCheckoutAttributeValue(CheckoutAttributeValue checkoutAttributeValue, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the checkout attribute value

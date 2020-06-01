@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.Directory
@@ -38,7 +38,8 @@ namespace Nop.Services.Directory
         /// Inserts a measure dimension
         /// </summary>
         /// <param name="measure">Measure dimension</param>
-        void InsertMeasureDimension(MeasureDimension measure);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertMeasureDimension(MeasureDimension measure, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the measure dimension
@@ -105,7 +106,8 @@ namespace Nop.Services.Directory
         /// Inserts a measure weight
         /// </summary>
         /// <param name="measure">Measure weight</param>
-        void InsertMeasureWeight(MeasureWeight measure);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertMeasureWeight(MeasureWeight measure, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the measure weight

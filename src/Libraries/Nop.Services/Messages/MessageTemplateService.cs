@@ -220,26 +220,26 @@ namespace Nop.Services.Messages
             {
                 var bccEmailAddresses = _localizationService.GetLocalized(messageTemplate, x => x.BccEmailAddresses, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(bccEmailAddresses))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.BccEmailAddresses, bccEmailAddresses, lang.Id, skipEventNotification);
 
                 var subject = _localizationService.GetLocalized(messageTemplate, x => x.Subject, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(subject))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Subject, subject, lang.Id, skipEventNotification);
 
                 var body = _localizationService.GetLocalized(messageTemplate, x => x.Body, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(body))
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.Body, body, lang.Id, skipEventNotification);
 
                 var emailAccountId = _localizationService.GetLocalized(messageTemplate, x => x.EmailAccountId, lang.Id, false, false);
                 if (emailAccountId > 0)
-                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(mtCopy, x => x.EmailAccountId, emailAccountId, lang.Id, skipEventNotification);
             }
 
             //store mapping
             var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(messageTemplate);
             foreach (var id in selectedStoreIds)
             {
-                _storeMappingService.InsertStoreMapping(mtCopy, id);
+                _storeMappingService.InsertStoreMapping(mtCopy, id, skipEventNotification);
             }
 
             return mtCopy;

@@ -39,7 +39,8 @@ namespace Nop.Services.Seo
         /// Inserts an URL record
         /// </summary>
         /// <param name="urlRecord">URL record</param>
-        void InsertUrlRecord(UrlRecord urlRecord);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertUrlRecord(UrlRecord urlRecord, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the URL record
@@ -81,7 +82,8 @@ namespace Nop.Services.Seo
         /// <param name="entity">Entity</param>
         /// <param name="slug">Slug</param>
         /// <param name="languageId">Language ID</param>
-        void SaveSlug<T>(T entity, string slug, int languageId) where T : BaseEntity, ISlugSupported;
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SaveSlug<T>(T entity, string slug, int languageId, bool skipEventNotification = false) where T : BaseEntity, ISlugSupported;
 
         /// <summary>
         ///  Get search engine friendly name (slug)

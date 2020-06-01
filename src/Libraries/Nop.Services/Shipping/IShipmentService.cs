@@ -75,7 +75,8 @@ namespace Nop.Services.Shipping
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        void InsertShipment(Shipment shipment);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertShipment(Shipment shipment, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the shipment
@@ -107,7 +108,8 @@ namespace Nop.Services.Shipping
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
-        void InsertShipmentItem(ShipmentItem shipmentItem);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertShipmentItem(ShipmentItem shipmentItem, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the shipment item

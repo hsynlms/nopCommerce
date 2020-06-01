@@ -260,15 +260,19 @@ namespace Nop.Services.Shipping
         /// Inserts a shipment
         /// </summary>
         /// <param name="shipment">Shipment</param>
-        public virtual void InsertShipment(Shipment shipment)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertShipment(Shipment shipment, bool skipEventNotification = false)
         {
             if (shipment == null)
                 throw new ArgumentNullException(nameof(shipment));
 
             _shipmentRepository.Insert(shipment);
 
-            //event notification
-            _eventPublisher.EntityInserted(shipment);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(shipment);
+            }
         }
 
         /// <summary>
@@ -331,15 +335,19 @@ namespace Nop.Services.Shipping
         /// Inserts a shipment item
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
-        public virtual void InsertShipmentItem(ShipmentItem shipmentItem)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertShipmentItem(ShipmentItem shipmentItem, bool skipEventNotification = false)
         {
             if (shipmentItem == null)
                 throw new ArgumentNullException(nameof(shipmentItem));
 
             _siRepository.Insert(shipmentItem);
 
-            //event notification
-            _eventPublisher.EntityInserted(shipmentItem);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(shipmentItem);
+            }
         }
 
         /// <summary>

@@ -144,15 +144,19 @@ namespace Nop.Services.Security
         /// Inserts a permission
         /// </summary>
         /// <param name="permission">Permission</param>
-        public virtual void InsertPermissionRecord(PermissionRecord permission)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPermissionRecord(PermissionRecord permission, bool skipEventNotification = false)
         {
             if (permission == null)
                 throw new ArgumentNullException(nameof(permission));
 
             _permissionRecordRepository.Insert(permission);
 
-            //event notification
-            _eventPublisher.EntityInserted(permission);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(permission);
+            }
         }
 
         /// <summary>
@@ -174,7 +178,8 @@ namespace Nop.Services.Security
         /// Install permissions
         /// </summary>
         /// <param name="permissionProvider">Permission provider</param>
-        public virtual void InstallPermissions(IPermissionProvider permissionProvider)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InstallPermissions(IPermissionProvider permissionProvider, bool skipEventNotification = false)
         {
             //install new permissions
             var permissions = permissionProvider.GetPermissions();
@@ -196,7 +201,7 @@ namespace Nop.Services.Security
                 };
 
                 //save new permission
-                InsertPermissionRecord(permission1);
+                InsertPermissionRecord(permission1, skipEventNotification);
 
                 foreach (var defaultPermission in defaultPermissions)
                 {
@@ -210,7 +215,7 @@ namespace Nop.Services.Security
                             Active = true,
                             SystemName = defaultPermission.systemRoleName
                         };
-                        _customerService.InsertCustomerRole(customerRole);
+                        _customerService.InsertCustomerRole(customerRole, skipEventNotification);
                     }
 
                     var defaultMappingProvided = defaultPermission.permissions.Any(p => p.SystemName == permission1.SystemName);
@@ -218,7 +223,7 @@ namespace Nop.Services.Security
                     if (!defaultMappingProvided)
                         continue;
 
-                    InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission1.Id });
+                    InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission1.Id }, skipEventNotification);
                 }
 
                 //save localization
@@ -371,15 +376,19 @@ namespace Nop.Services.Security
         /// Inserts a permission record-customer role mapping
         /// </summary>
         /// <param name="permissionRecordCustomerRoleMapping">Permission record-customer role mapping</param>
-        public virtual void InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPermissionRecordCustomerRoleMapping(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping, bool skipEventNotification = false)
         {
             if (permissionRecordCustomerRoleMapping is null)
                 throw new ArgumentNullException(nameof(permissionRecordCustomerRoleMapping));
 
             _permissionRecordCustomerRoleMappingRepository.Insert(permissionRecordCustomerRoleMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(permissionRecordCustomerRoleMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(permissionRecordCustomerRoleMapping);
+            }
         }
 
         #endregion

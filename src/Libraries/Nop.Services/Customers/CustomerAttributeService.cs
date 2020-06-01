@@ -85,15 +85,19 @@ namespace Nop.Services.Customers
         /// Inserts a customer attribute
         /// </summary>
         /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute, bool skipEventNotification = false)
         {
             if (customerAttribute == null)
                 throw new ArgumentNullException(nameof(customerAttribute));
 
             _customerAttributeRepository.Insert(customerAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(customerAttribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customerAttribute);
+            }
         }
 
         /// <summary>
@@ -161,15 +165,19 @@ namespace Nop.Services.Customers
         /// Inserts a customer attribute value
         /// </summary>
         /// <param name="customerAttributeValue">Customer attribute value</param>
-        public virtual void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCustomerAttributeValue(CustomerAttributeValue customerAttributeValue, bool skipEventNotification = false)
         {
             if (customerAttributeValue == null)
                 throw new ArgumentNullException(nameof(customerAttributeValue));
 
             _customerAttributeValueRepository.Insert(customerAttributeValue);
 
-            //event notification
-            _eventPublisher.EntityInserted(customerAttributeValue);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(customerAttributeValue);
+            }
         }
 
         /// <summary>

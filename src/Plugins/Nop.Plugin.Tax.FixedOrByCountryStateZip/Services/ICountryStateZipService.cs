@@ -1,4 +1,4 @@
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Plugin.Tax.FixedOrByCountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
@@ -31,7 +31,8 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        void InsertTaxRate(TaxRate taxRate);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertTaxRate(TaxRate taxRate, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the tax rate

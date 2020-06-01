@@ -439,15 +439,19 @@ namespace Nop.Services.Catalog
         /// Inserts category
         /// </summary>
         /// <param name="category">Category</param>
-        public virtual void InsertCategory(Category category)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCategory(Category category, bool skipEventNotification = false)
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
 
             _categoryRepository.Insert(category);
 
-            //event notification
-            _eventPublisher.EntityInserted(category);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(category);
+            }
         }
 
         /// <summary>
@@ -465,15 +469,19 @@ namespace Nop.Services.Catalog
         /// Inserts a discount-category mapping record
         /// </summary>
         /// <param name="discountCategoryMapping">Discount-category mapping</param>
-        public virtual void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDiscountCategoryMapping(DiscountCategoryMapping discountCategoryMapping, bool skipEventNotification = false)
         {
             if (discountCategoryMapping is null)
                 throw new ArgumentNullException(nameof(discountCategoryMapping));
 
             _discountCategoryMappingRepository.Insert(discountCategoryMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(discountCategoryMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discountCategoryMapping);
+            }
         }
 
         /// <summary>
@@ -678,15 +686,19 @@ namespace Nop.Services.Catalog
         /// Inserts a product category mapping
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
-        public virtual void InsertProductCategory(ProductCategory productCategory)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductCategory(ProductCategory productCategory, bool skipEventNotification = false)
         {
             if (productCategory == null)
                 throw new ArgumentNullException(nameof(productCategory));
 
             _productCategoryRepository.Insert(productCategory);
 
-            //event notification
-            _eventPublisher.EntityInserted(productCategory);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productCategory);
+            }
         }
 
         /// <summary>

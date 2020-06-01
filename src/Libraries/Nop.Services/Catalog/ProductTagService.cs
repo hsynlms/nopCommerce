@@ -236,30 +236,38 @@ namespace Nop.Services.Catalog
         /// Inserts a product-product tag mapping
         /// </summary>
         /// <param name="tagMapping">Product-product tag mapping</param>
-        public virtual void InsertProductProductTagMapping(ProductProductTagMapping tagMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductProductTagMapping(ProductProductTagMapping tagMapping, bool skipEventNotification = false)
         {
             if (tagMapping is null)
                 throw new ArgumentNullException(nameof(tagMapping));
 
             _productProductTagMappingRepository.Insert(tagMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(tagMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(tagMapping);
+            }
         }
 
         /// <summary>
         /// Inserts a product tag
         /// </summary>
         /// <param name="productTag">Product tag</param>
-        public virtual void InsertProductTag(ProductTag productTag)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertProductTag(ProductTag productTag, bool skipEventNotification = false)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
 
             _productTagRepository.Insert(productTag);
-            
-            //event notification
-            _eventPublisher.EntityInserted(productTag);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(productTag);
+            }
         }
 
         /// <summary>
@@ -288,7 +296,7 @@ namespace Nop.Services.Catalog
             _productTagRepository.Update(productTag);
 
             var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
-            _urlRecordService.SaveSlug(productTag, seName, 0);
+            _urlRecordService.SaveSlug(productTag, seName, 0, skipEventNotification);
             
             //event notification
             _eventPublisher.EntityUpdated(productTag);
@@ -357,7 +365,7 @@ namespace Nop.Services.Catalog
                     {
                         Name = productTagName
                     };
-                    InsertProductTag(productTag);
+                    InsertProductTag(productTag, skipEventNotification);
                 }
                 else
                 {
@@ -366,11 +374,11 @@ namespace Nop.Services.Catalog
 
                 if (!ProductTagExists(product, productTag.Id))
                 {
-                    InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id });
+                    InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = product.Id }, skipEventNotification);
                 }
 
                 var seName = _urlRecordService.ValidateSeName(productTag, string.Empty, productTag.Name, true);
-                _urlRecordService.SaveSlug(productTag, seName, 0);
+                _urlRecordService.SaveSlug(productTag, seName, 0, skipEventNotification);
             }
 
             //cache

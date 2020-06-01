@@ -49,7 +49,8 @@ namespace Nop.Services.Localization
         /// Inserts a locale string resource
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
-        void InsertLocaleStringResource(LocaleStringResource localeStringResource);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertLocaleStringResource(LocaleStringResource localeStringResource, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the locale string resource
@@ -137,9 +138,10 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="value">Localized value</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Localized property</returns>
         void SaveLocalizedSetting<TSettings>(TSettings settings, Expression<Func<TSettings, string>> keySelector,
-            int languageId, string value) where TSettings : ISettings, new();
+            int languageId, string value, bool skipEventNotification = false) where TSettings : ISettings, new();
 
         /// <summary>
         /// Get localized value of enum
@@ -163,7 +165,8 @@ namespace Nop.Services.Localization
         /// Save localized name of a permission
         /// </summary>
         /// <param name="permissionRecord">Permission record</param>
-        void SaveLocalizedPermissionName(PermissionRecord permissionRecord);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SaveLocalizedPermissionName(PermissionRecord permissionRecord, bool skipEventNotification = false);
 
         /// <summary>
         /// Delete a localized name of a permission
@@ -177,7 +180,8 @@ namespace Nop.Services.Localization
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
         /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
-        void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void AddOrUpdatePluginLocaleResource(string resourceName, string resourceValue, string languageCulture = null, bool skipEventNotification = false);
 
         /// <summary>
         /// Add locale resources
@@ -224,7 +228,8 @@ namespace Nop.Services.Localization
         /// <param name="plugin">Plugin</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="localizedFriendlyName">Localized friendly name</param>
-        void SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void SaveLocalizedFriendlyName<TPlugin>(TPlugin plugin, int languageId, string localizedFriendlyName, bool skipEventNotification = false)
             where TPlugin : IPlugin;
     }
 }

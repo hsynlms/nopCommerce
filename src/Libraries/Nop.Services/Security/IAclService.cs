@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -35,15 +35,17 @@ namespace Nop.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        void InsertAclRecord(AclRecord aclRecord);
-        
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAclRecord(AclRecord aclRecord, bool skipEventNotification = false);
+
         /// <summary>
         /// Inserts an ACL record
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
-        void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported;
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAclRecord<T>(T entity, int customerRoleId, bool skipEventNotification = false) where T : BaseEntity, IAclSupported;
 
         /// <summary>
         /// Updates the ACL record

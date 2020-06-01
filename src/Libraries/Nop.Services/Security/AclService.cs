@@ -104,15 +104,19 @@ namespace Nop.Services.Security
         /// Inserts an ACL record
         /// </summary>
         /// <param name="aclRecord">ACL record</param>
-        public virtual void InsertAclRecord(AclRecord aclRecord)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAclRecord(AclRecord aclRecord, bool skipEventNotification = false)
         {
             if (aclRecord == null)
                 throw new ArgumentNullException(nameof(aclRecord));
 
             _aclRecordRepository.Insert(aclRecord);
 
-            //event notification
-            _eventPublisher.EntityInserted(aclRecord);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(aclRecord);
+            }
         }
 
         /// <summary>
@@ -121,7 +125,8 @@ namespace Nop.Services.Security
         /// <typeparam name="T">Type</typeparam>
         /// <param name="customerRoleId">Customer role id</param>
         /// <param name="entity">Entity</param>
-        public virtual void InsertAclRecord<T>(T entity, int customerRoleId) where T : BaseEntity, IAclSupported
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAclRecord<T>(T entity, int customerRoleId, bool skipEventNotification = false) where T : BaseEntity, IAclSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -139,7 +144,7 @@ namespace Nop.Services.Security
                 CustomerRoleId = customerRoleId
             };
 
-            InsertAclRecord(aclRecord);
+            InsertAclRecord(aclRecord, skipEventNotification);
         }
 
         /// <summary>

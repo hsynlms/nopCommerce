@@ -81,7 +81,7 @@ namespace Nop.Services.Catalog
         {
             foreach (var discountMapping in _productService.GetAllDiscountsAppliedToProduct(product.Id))
             {
-                _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId });
+                _productService.InsertDiscountProductMapping(new DiscountProductMapping { EntityId = productCopy.Id, DiscountId = discountMapping.DiscountId }, skipEventNotification);
                 _productService.UpdateProduct(productCopy);
             }
         }
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
                     Price = tierPrice.Price,
                     StartDateTimeUtc = tierPrice.StartDateTimeUtc,
                     EndDateTimeUtc = tierPrice.EndDateTimeUtc
-                });
+                }, skipEventNotification);
             }
         }
 
@@ -167,14 +167,14 @@ namespace Nop.Services.Catalog
                     ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
                     DefaultValue = productAttributeMapping.DefaultValue
                 };
-                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
+                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy, skipEventNotification);
                 //localization
                 foreach (var lang in languages)
                 {
                     var textPrompt = _localizationService.GetLocalized(productAttributeMapping, x => x.TextPrompt, lang.Id, false, false);
                     if (!string.IsNullOrEmpty(textPrompt))
                         _localizedEntityService.SaveLocalizedValue(productAttributeMappingCopy, x => x.TextPrompt, textPrompt,
-                            lang.Id);
+                            lang.Id, skipEventNotification);
                 }
 
                 productAttributeMappingCopies.Add(productAttributeMappingCopy.Id, productAttributeMappingCopy);
@@ -227,12 +227,13 @@ namespace Nop.Services.Catalog
                                 origImageSquaresPicture.MimeType,
                                 origImageSquaresPicture.SeoFilename,
                                 origImageSquaresPicture.AltAttribute,
-                                origImageSquaresPicture.TitleAttribute);
+                                origImageSquaresPicture.TitleAttribute,
+                                skipEventNotification);
                             attributeValueCopy.ImageSquaresPictureId = imageSquaresPictureCopy.Id;
                         }
                     }
 
-                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
+                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy, skipEventNotification);
 
                     //save associated value (used for combinations copying)
                     associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
@@ -242,7 +243,7 @@ namespace Nop.Services.Catalog
                     {
                         var name = _localizationService.GetLocalized(productAttributeValue, x => x.Name, lang.Id, false, false);
                         if (!string.IsNullOrEmpty(name))
-                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
+                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id, skipEventNotification);
                     }
                 }
             }
@@ -341,12 +342,13 @@ namespace Nop.Services.Catalog
                     NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow,
                     PictureId = combinationPictureId
                 };
-                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
+                _productAttributeService.InsertProductAttributeCombination(combinationCopy, skipEventNotification);
 
                 //quantity change history
                 _productService.AddStockQuantityHistoryEntry(productCopy, combination.StockQuantity,
                     combination.StockQuantity,
-                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id);
+                    message: string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), combinationId: combination.Id,
+                    skipEventNotification);
             }
         }
 
@@ -369,7 +371,7 @@ namespace Nop.Services.Catalog
                     ShowOnProductPage = productSpecificationAttribute.ShowOnProductPage,
                     DisplayOrder = productSpecificationAttribute.DisplayOrder
                 };
-                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy);
+                _specificationAttributeService.InsertProductSpecificationAttribute(psaCopy, skipEventNotification);
             }
         }
 
@@ -387,7 +389,7 @@ namespace Nop.Services.Catalog
                     {
                         ProductId1 = productCopy.Id,
                         ProductId2 = csProduct.ProductId2
-                    });
+                    }, skipEventNotification);
             }
         }
 
@@ -406,7 +408,7 @@ namespace Nop.Services.Catalog
                         ProductId1 = productCopy.Id,
                         ProductId2 = relatedProduct.ProductId2,
                         DisplayOrder = relatedProduct.DisplayOrder
-                    });
+                    }, skipEventNotification);
             }
         }
 
@@ -427,7 +429,7 @@ namespace Nop.Services.Catalog
                     DisplayOrder = productManufacturers.DisplayOrder
                 };
 
-                _manufacturerService.InsertProductManufacturer(productManufacturerCopy);
+                _manufacturerService.InsertProductManufacturer(productManufacturerCopy, skipEventNotification);
             }
         }
 
@@ -448,7 +450,7 @@ namespace Nop.Services.Catalog
                     DisplayOrder = productCategory.DisplayOrder
                 };
 
-                _categoryService.InsertProductCategory(productCategoryCopy);
+                _categoryService.InsertProductCategory(productCategoryCopy, skipEventNotification);
             }
         }
 
@@ -468,11 +470,11 @@ namespace Nop.Services.Catalog
                         WarehouseId = pwi.WarehouseId,
                         StockQuantity = pwi.StockQuantity,
                         ReservedQuantity = 0
-                    });
+                    }, skipEventNotification);
 
                 //quantity change history
                 var message = $"{_localizationService.GetResource("Admin.StockQuantityHistory.Messages.MultipleWarehouses")} {string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id)}";
-                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message);
+                _productService.AddStockQuantityHistoryEntry(productCopy, pwi.StockQuantity, pwi.StockQuantity, pwi.WarehouseId, message, skipEventNotification);
             }
 
             _productService.UpdateProduct(productCopy);
@@ -501,13 +503,14 @@ namespace Nop.Services.Catalog
                     picture.MimeType,
                     _pictureService.GetPictureSeName(newName),
                     picture.AltAttribute,
-                    picture.TitleAttribute);
+                    picture.TitleAttribute,
+                    skipEventNotification);
                 _productService.InsertProductPicture(new ProductPicture
                 {
                     ProductId = productCopy.Id,
                     PictureId = pictureCopy.Id,
                     DisplayOrder = productPicture.DisplayOrder
-                });
+                }, skipEventNotification);
                 originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
             }
 
@@ -528,30 +531,30 @@ namespace Nop.Services.Catalog
             {
                 var name = _localizationService.GetLocalized(product, x => x.Name, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(name))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.Name, name, lang.Id, skipEventNotification);
 
                 var shortDescription = _localizationService.GetLocalized(product, x => x.ShortDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(shortDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.ShortDescription, shortDescription, lang.Id, skipEventNotification);
 
                 var fullDescription = _localizationService.GetLocalized(product, x => x.FullDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(fullDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.FullDescription, fullDescription, lang.Id, skipEventNotification);
 
                 var metaKeywords = _localizationService.GetLocalized(product, x => x.MetaKeywords, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaKeywords))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaKeywords, metaKeywords, lang.Id, skipEventNotification);
 
                 var metaDescription = _localizationService.GetLocalized(product, x => x.MetaDescription, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaDescription))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaDescription, metaDescription, lang.Id, skipEventNotification);
 
                 var metaTitle = _localizationService.GetLocalized(product, x => x.MetaTitle, lang.Id, false, false);
                 if (!string.IsNullOrEmpty(metaTitle))
-                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
+                    _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id, skipEventNotification);
 
                 //search engine name
-                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, name, false), lang.Id);
+                _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, name, false), lang.Id, skipEventNotification);
             }
         }
 
@@ -583,7 +586,7 @@ namespace Nop.Services.Catalog
                         Extension = download.Extension,
                         IsNew = download.IsNew
                     };
-                    _downloadService.InsertDownload(downloadCopy);
+                    _downloadService.InsertDownload(downloadCopy, skipEventNotification);
                     downloadId = downloadCopy.Id;
                 }
 
@@ -603,7 +606,7 @@ namespace Nop.Services.Catalog
                             Extension = sampleDownload.Extension,
                             IsNew = sampleDownload.IsNew
                         };
-                        _downloadService.InsertDownload(sampleDownloadCopy);
+                        _downloadService.InsertDownload(sampleDownloadCopy, skipEventNotification);
                         sampleDownloadId = sampleDownloadCopy.Id;
                     }
                 }
@@ -715,10 +718,10 @@ namespace Nop.Services.Catalog
             };
 
             //validate search engine name
-            _productService.InsertProduct(productCopy);
+            _productService.InsertProduct(productCopy, skipEventNotification);
 
             //search engine name
-            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, productCopy.Name, true), 0);
+            _urlRecordService.SaveSlug(productCopy, _urlRecordService.ValidateSeName(productCopy, string.Empty, productCopy.Name, true), 0, skipEventNotification);
             return productCopy;
         }
 
@@ -752,7 +755,7 @@ namespace Nop.Services.Catalog
             //copy product tags
             foreach (var productTag in _productTagService.GetAllProductTagsByProductId(product.Id))
             {
-                _productTagService.InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id });
+                _productTagService.InsertProductProductTagMapping(new ProductProductTagMapping { ProductTagId = productTag.Id, ProductId = productCopy.Id }, skipEventNotification);
             }
 
             _productService.UpdateProduct(productCopy);
@@ -762,7 +765,7 @@ namespace Nop.Services.Catalog
 
             //quantity change history
             _productService.AddStockQuantityHistoryEntry(productCopy, product.StockQuantity, product.StockQuantity, product.WarehouseId,
-                string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id));
+                string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.CopyProduct"), product.Id), skipEventNotification);
 
             //product specifications
             CopyProductSpecifications(product, productCopy);
@@ -785,7 +788,7 @@ namespace Nop.Services.Catalog
             var selectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
             foreach (var id in selectedStoreIds)
             {
-                _storeMappingService.InsertStoreMapping(productCopy, id);
+                _storeMappingService.InsertStoreMapping(productCopy, id, skipEventNotification);
             }
 
             //tier prices

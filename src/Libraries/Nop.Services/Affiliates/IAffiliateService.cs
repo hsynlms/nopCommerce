@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 
@@ -53,7 +53,8 @@ namespace Nop.Services.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        void InsertAffiliate(Affiliate affiliate);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAffiliate(Affiliate affiliate, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the affiliate

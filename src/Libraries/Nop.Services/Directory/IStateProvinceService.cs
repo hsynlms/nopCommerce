@@ -57,7 +57,8 @@ namespace Nop.Services.Directory
         /// Inserts a state/province
         /// </summary>
         /// <param name="stateProvince">State/province</param>
-        void InsertStateProvince(StateProvince stateProvince);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertStateProvince(StateProvince stateProvince, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a state/province

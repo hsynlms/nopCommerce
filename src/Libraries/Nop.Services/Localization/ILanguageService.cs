@@ -12,7 +12,8 @@ namespace Nop.Services.Localization
         /// Deletes a language
         /// </summary>
         /// <param name="language">Language</param>
-        void DeleteLanguage(Language language);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void DeleteLanguage(Language language, bool skipEventNotification = false);
 
         /// <summary>
         /// Gets all languages
@@ -33,7 +34,8 @@ namespace Nop.Services.Localization
         /// Inserts a language
         /// </summary>
         /// <param name="language">Language</param>
-        void InsertLanguage(Language language);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertLanguage(Language language, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a language

@@ -103,15 +103,19 @@ namespace Nop.Services.Stores
         /// Inserts a store mapping record
         /// </summary>
         /// <param name="storeMapping">Store mapping</param>
-        protected virtual void InsertStoreMapping(StoreMapping storeMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        protected virtual void InsertStoreMapping(StoreMapping storeMapping, bool skipEventNotification = false)
         {
             if (storeMapping == null)
                 throw new ArgumentNullException(nameof(storeMapping));
 
             _storeMappingRepository.Insert(storeMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(storeMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(storeMapping);
+            }
         }
 
         /// <summary>
@@ -120,7 +124,8 @@ namespace Nop.Services.Stores
         /// <typeparam name="T">Type</typeparam>
         /// <param name="storeId">Store id</param>
         /// <param name="entity">Entity</param>
-        public virtual void InsertStoreMapping<T>(T entity, int storeId) where T : BaseEntity, IStoreMappingSupported
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertStoreMapping<T>(T entity, int storeId, bool skipEventNotification = false) where T : BaseEntity, IStoreMappingSupported
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -138,7 +143,7 @@ namespace Nop.Services.Stores
                 StoreId = storeId
             };
 
-            InsertStoreMapping(storeMapping);
+            InsertStoreMapping(storeMapping, skipEventNotification);
         }
 
         /// <summary>

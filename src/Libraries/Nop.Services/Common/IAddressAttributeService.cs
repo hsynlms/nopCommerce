@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
@@ -31,7 +31,8 @@ namespace Nop.Services.Common
         /// Inserts an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        void InsertAddressAttribute(AddressAttribute addressAttribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAddressAttribute(AddressAttribute addressAttribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the address attribute
@@ -63,7 +64,8 @@ namespace Nop.Services.Common
         /// Inserts a address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the address attribute value

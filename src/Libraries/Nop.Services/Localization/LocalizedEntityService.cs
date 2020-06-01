@@ -152,15 +152,19 @@ namespace Nop.Services.Localization
         /// Inserts a localized property
         /// </summary>
         /// <param name="localizedProperty">Localized property</param>
-        public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertLocalizedProperty(LocalizedProperty localizedProperty, bool skipEventNotification = false)
         {
             if (localizedProperty == null)
                 throw new ArgumentNullException(nameof(localizedProperty));
 
             _localizedPropertyRepository.Insert(localizedProperty);
 
-            //event notification
-            _eventPublisher.EntityInserted(localizedProperty);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(localizedProperty);
+            }
         }
 
         /// <summary>
@@ -186,12 +190,13 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void SaveLocalizedValue<T>(T entity,
             Expression<Func<T, string>> keySelector,
             string localeValue,
-            int languageId) where T : BaseEntity, ILocalizedEntity
+            int languageId, bool skipEventNotification = false) where T : BaseEntity, ILocalizedEntity
         {
-            SaveLocalizedValue<T, string>(entity, keySelector, localeValue, languageId);
+            SaveLocalizedValue<T, string>(entity, keySelector, localeValue, languageId, skipEventNotification);
         }
 
         /// <summary>
@@ -203,10 +208,11 @@ namespace Nop.Services.Localization
         /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         public virtual void SaveLocalizedValue<T, TPropType>(T entity,
             Expression<Func<T, TPropType>> keySelector,
             TPropType localeValue,
-            int languageId) where T : BaseEntity, ILocalizedEntity
+            int languageId, bool skipEventNotification = false) where T : BaseEntity, ILocalizedEntity
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -267,7 +273,7 @@ namespace Nop.Services.Localization
                     LocaleKeyGroup = localeKeyGroup,
                     LocaleValue = localeValueStr
                 };
-                InsertLocalizedProperty(prop);
+                InsertLocalizedProperty(prop, skipEventNotification);
             }
         }
 

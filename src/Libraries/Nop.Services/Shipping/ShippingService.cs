@@ -210,15 +210,19 @@ namespace Nop.Services.Shipping
         /// Inserts a shipping method
         /// </summary>
         /// <param name="shippingMethod">Shipping method</param>
-        public virtual void InsertShippingMethod(ShippingMethod shippingMethod)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertShippingMethod(ShippingMethod shippingMethod, bool skipEventNotification = false)
         {
             if (shippingMethod == null)
                 throw new ArgumentNullException(nameof(shippingMethod));
 
             _shippingMethodRepository.Insert(shippingMethod);
 
-            //event notification
-            _eventPublisher.EntityInserted(shippingMethod);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(shippingMethod);
+            }
         }
 
         /// <summary>
@@ -272,15 +276,19 @@ namespace Nop.Services.Shipping
         /// Inserts a shipping country mapping
         /// </summary>
         /// <param name="shippingMethodCountryMapping">Shipping country mapping</param>
-        public virtual void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertShippingMethodCountryMapping(ShippingMethodCountryMapping shippingMethodCountryMapping, bool skipEventNotification = false)
         {
             if (shippingMethodCountryMapping == null)
                 throw new ArgumentNullException(nameof(shippingMethodCountryMapping));
 
             _shippingMethodCountryMappingRepository.Insert(shippingMethodCountryMapping);
 
-            //event notification
-            _eventPublisher.EntityInserted(shippingMethodCountryMapping);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(shippingMethodCountryMapping);
+            }
         }
 
         /// <summary>
@@ -355,15 +363,19 @@ namespace Nop.Services.Shipping
         /// Inserts a warehouse
         /// </summary>
         /// <param name="warehouse">Warehouse</param>
-        public virtual void InsertWarehouse(Warehouse warehouse)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertWarehouse(Warehouse warehouse, bool skipEventNotification = false)
         {
             if (warehouse == null)
                 throw new ArgumentNullException(nameof(warehouse));
 
             _warehouseRepository.Insert(warehouse);
 
-            //event notification
-            _eventPublisher.EntityInserted(warehouse);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(warehouse);
+            }
         }
 
         /// <summary>

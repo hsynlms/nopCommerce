@@ -32,7 +32,8 @@ namespace Nop.Services.Common
         /// Inserts an attribute
         /// </summary>
         /// <param name="attribute">attribute</param>
-        void InsertAttribute(GenericAttribute attribute);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertAttribute(GenericAttribute attribute, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the attribute

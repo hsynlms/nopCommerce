@@ -1,4 +1,4 @@
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
@@ -41,7 +41,8 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        void InsertSearchTerm(SearchTerm searchTerm);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertSearchTerm(SearchTerm searchTerm, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the search term record

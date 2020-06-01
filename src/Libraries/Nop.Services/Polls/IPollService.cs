@@ -40,7 +40,8 @@ namespace Nop.Services.Polls
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        void InsertPoll(Poll poll);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPoll(Poll poll, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the poll
@@ -74,7 +75,8 @@ namespace Nop.Services.Polls
         /// Inserts a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        void InsertPollAnswer(PollAnswer pollAnswer);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPollAnswer(PollAnswer pollAnswer, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the poll answer
@@ -94,7 +96,8 @@ namespace Nop.Services.Polls
         /// Inserts a poll voting record
         /// </summary>
         /// <param name="pollVotingRecord">Voting record</param>
-        void InsertPollVotingRecord(PollVotingRecord pollVotingRecord);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertPollVotingRecord(PollVotingRecord pollVotingRecord, bool skipEventNotification = false);
 
         /// <summary>
         /// Gets a poll voting records by parent answer

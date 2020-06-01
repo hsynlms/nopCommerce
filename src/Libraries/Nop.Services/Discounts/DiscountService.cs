@@ -245,15 +245,19 @@ namespace Nop.Services.Discounts
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
-        public virtual void InsertDiscount(Discount discount)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDiscount(Discount discount, bool skipEventNotification = false)
         {
             if (discount == null)
                 throw new ArgumentNullException(nameof(discount));
 
             _discountRepository.Insert(discount);
 
-            //event notification
-            _eventPublisher.EntityInserted(discount);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discount);
+            }
         }
 
         /// <summary>
@@ -451,15 +455,19 @@ namespace Nop.Services.Discounts
         /// Inserts a discount requirement
         /// </summary>
         /// <param name="discountRequirement">Discount requirement</param>
-        public virtual void InsertDiscountRequirement(DiscountRequirement discountRequirement)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDiscountRequirement(DiscountRequirement discountRequirement, bool skipEventNotification = false)
         {
             if (discountRequirement is null)
                 throw new ArgumentNullException(nameof(discountRequirement));
 
             _discountRequirementRepository.Insert(discountRequirement);
 
-            //event notification
-            _eventPublisher.EntityInserted(discountRequirement);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discountRequirement);
+            }
         }
 
         /// <summary>
@@ -687,15 +695,19 @@ namespace Nop.Services.Discounts
         /// Insert discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
-        public virtual void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory, bool skipEventNotification = false)
         {
             if (discountUsageHistory == null)
                 throw new ArgumentNullException(nameof(discountUsageHistory));
 
             _discountUsageHistoryRepository.Insert(discountUsageHistory);
 
-            //event notification
-            _eventPublisher.EntityInserted(discountUsageHistory);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(discountUsageHistory);
+            }
         }
 
         /// <summary>

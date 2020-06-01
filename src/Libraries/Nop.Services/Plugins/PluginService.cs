@@ -477,7 +477,7 @@ namespace Nop.Services.Plugins
                     //activity log
                     var customer = _customerService.GetCustomerByGuid(pluginToInstall.CustomerGuid ?? Guid.Empty);
                     customerActivityService.InsertActivity(customer, "InstallNewPlugin",
-                        string.Format(localizationService.GetResource("ActivityLog.InstallNewPlugin"), descriptor.SystemName));
+                        string.Format(localizationService.GetResource("ActivityLog.InstallNewPlugin"), descriptor.SystemName), skipEventNotification);
 
                     //mark the plugin as installed
                     descriptor.Installed = true;
@@ -531,7 +531,7 @@ namespace Nop.Services.Plugins
 
                     //activity log
                     customerActivityService.InsertActivity("UninstallPlugin",
-                        string.Format(localizationService.GetResource("ActivityLog.UninstallPlugin"), descriptor.SystemName));
+                        string.Format(localizationService.GetResource("ActivityLog.UninstallPlugin"), descriptor.SystemName), skipEventNotification);
 
                     //mark the plugin as uninstalled
                     descriptor.Installed = false;
@@ -582,7 +582,7 @@ namespace Nop.Services.Plugins
 
                     //activity log
                     customerActivityService.InsertActivity("DeletePlugin",
-                        string.Format(localizationService.GetResource("ActivityLog.DeletePlugin"), descriptor.SystemName));
+                        string.Format(localizationService.GetResource("ActivityLog.DeletePlugin"), descriptor.SystemName), skipEventNotification);
                 }
                 catch (Exception exception)
                 {

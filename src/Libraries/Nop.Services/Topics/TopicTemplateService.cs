@@ -84,15 +84,19 @@ namespace Nop.Services.Topics
         /// Inserts topic template
         /// </summary>
         /// <param name="topicTemplate">Topic template</param>
-        public virtual void InsertTopicTemplate(TopicTemplate topicTemplate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTopicTemplate(TopicTemplate topicTemplate, bool skipEventNotification = false)
         {
             if (topicTemplate == null)
                 throw new ArgumentNullException(nameof(topicTemplate));
 
             _topicTemplateRepository.Insert(topicTemplate);
 
-            //event notification
-            _eventPublisher.EntityInserted(topicTemplate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(topicTemplate);
+            }
         }
 
         /// <summary>

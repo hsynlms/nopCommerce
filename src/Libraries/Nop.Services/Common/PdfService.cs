@@ -1170,7 +1170,7 @@ namespace Nop.Services.Common
             //logo               
             if (logoExists)
             {
-                var logoFilePath = _pictureService.GetThumbLocalPath(logoPicture, 0, false);
+                var logoFilePath = _pictureService.GetThumbLocalPath(logoPicture, 0, false, skipEventNotification);
                 var logo = Image.GetInstance(logoFilePath);
                 logo.Alignment = GetAlignment(lang, true);
                 logo.ScaleToFit(65f, 65f);
@@ -1586,7 +1586,7 @@ namespace Nop.Services.Common
                         if (picBinary == null || picBinary.Length <= 0)
                             continue;
 
-                        var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
+                        var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false, skipEventNotification);
                         var cell = new PdfPCell(Image.GetInstance(pictureLocalPath))
                         {
                             HorizontalAlignment = Element.ALIGN_LEFT,

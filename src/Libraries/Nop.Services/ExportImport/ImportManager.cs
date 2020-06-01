@@ -274,7 +274,7 @@ namespace Nop.Services.ExportImport
             if (pictureAlreadyExists)
                 return null;
 
-            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(name));
+            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(name), skipEventNotification);
             return newPicture;
         }
 
@@ -323,7 +323,7 @@ namespace Nop.Services.ExportImport
 
                     try
                     {
-                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name), skipEventNotification);
                         _productService.InsertProductPicture(new ProductPicture
                         {
                             //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
@@ -332,7 +332,7 @@ namespace Nop.Services.ExportImport
                             PictureId = newPicture.Id,
                             DisplayOrder = 1,
                             ProductId = product.ProductItem.Id
-                        });
+                        }, skipEventNotification);
                         _productService.UpdateProduct(product.ProductItem);
                     }
                     catch (Exception ex)
@@ -388,7 +388,7 @@ namespace Nop.Services.ExportImport
                         if (pictureAlreadyExists)
                             continue;
 
-                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name), skipEventNotification);
 
                         _productService.InsertProductPicture(new ProductPicture
                         {
@@ -398,7 +398,7 @@ namespace Nop.Services.ExportImport
                             PictureId = newPicture.Id,
                             DisplayOrder = 1,
                             ProductId = product.ProductItem.Id
-                        });
+                        }, skipEventNotification);
 
                         _productService.UpdateProduct(product.ProductItem);
                     }
@@ -559,7 +559,7 @@ namespace Nop.Services.ExportImport
         protected virtual void SaveCategory(bool isNew, Category category, Dictionary<string, Category> allCategories, string curentCategoryBreadCrumb, bool setSeName, string seName)
         {
             if (isNew)
-                _categoryService.InsertCategory(category);
+                _categoryService.InsertCategory(category, skipEventNotification);
             else
                 _categoryService.UpdateCategory(category);
 
@@ -572,7 +572,7 @@ namespace Nop.Services.ExportImport
 
             //search engine name
             if (setSeName)
-                _urlRecordService.SaveSlug(category, _urlRecordService.ValidateSeName(category, seName, category.Name, true), 0);
+                _urlRecordService.SaveSlug(category, _urlRecordService.ValidateSeName(category, seName, category.Name, true), 0, skipEventNotification);
         }
 
         protected virtual void SetOutLineForProductAttributeRow(object cellValue, ExcelWorksheet worksheet, int endRow)
@@ -635,7 +635,7 @@ namespace Nop.Services.ExportImport
                     AttributeControlTypeId = attributeControlTypeId,
                     DisplayOrder = attributeDisplayOrder
                 };
-                _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
+                _productAttributeService.InsertProductAttributeMapping(productAttributeMapping, skipEventNotification);
             }
             else
             {
@@ -680,7 +680,7 @@ namespace Nop.Services.ExportImport
                     PictureId = pictureId
                 };
 
-                _productAttributeService.InsertProductAttributeValue(pav);
+                _productAttributeService.InsertProductAttributeValue(pav, skipEventNotification);
             }
             else
             {
@@ -757,7 +757,7 @@ namespace Nop.Services.ExportImport
 
             if (isNew)
             {
-                _specificationAttributeService.InsertProductSpecificationAttribute(productSpecificationAttribute);
+                _specificationAttributeService.InsertProductSpecificationAttribute(productSpecificationAttribute, skipEventNotification);
             }
             else
             {
@@ -1578,7 +1578,7 @@ namespace Nop.Services.ExportImport
 
                 if (isNew)
                 {
-                    _productService.InsertProduct(product);
+                    _productService.InsertProduct(product, skipEventNotification);
                 }
                 else
                 {
@@ -1589,7 +1589,7 @@ namespace Nop.Services.ExportImport
                 if (isNew || previousWarehouseId == product.WarehouseId)
                 {
                     _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity - previousStockQuantity, product.StockQuantity,
-                        product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"));
+                        product.WarehouseId, _localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.Edit"), skipEventNotification);
                 }
                 //warehouse is changed 
                 else
@@ -1614,15 +1614,15 @@ namespace Nop.Services.ExportImport
                     var message = string.Format(_localizationService.GetResource("Admin.StockQuantityHistory.Messages.ImportProduct.EditWarehouse"), oldWarehouseMessage, newWarehouseMessage);
 
                     //record history
-                    _productService.AddStockQuantityHistoryEntry(product, -previousStockQuantity, 0, previousWarehouseId, message);
-                    _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message);
+                    _productService.AddStockQuantityHistoryEntry(product, -previousStockQuantity, 0, previousWarehouseId, message, skipEventNotification);
+                    _productService.AddStockQuantityHistoryEntry(product, product.StockQuantity, product.StockQuantity, product.WarehouseId, message, skipEventNotification);
                 }
 
                 var tempProperty = metadata.Manager.GetProperty("SeName");
 
                 //search engine name
                 var seName = tempProperty?.StringValue ?? (isNew ? string.Empty : _urlRecordService.GetSeName(product, 0));
-                _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0);
+                _urlRecordService.SaveSlug(product, _urlRecordService.ValidateSeName(product, seName, product.Name, true), 0, skipEventNotification);
 
                 tempProperty = metadata.Manager.GetProperty("Categories");
 
@@ -1665,7 +1665,7 @@ namespace Nop.Services.ExportImport
                             IsFeaturedProduct = false,
                             DisplayOrder = 1
                         };
-                        _categoryService.InsertProductCategory(productCategory);
+                        _categoryService.InsertProductCategory(productCategory, skipEventNotification);
                     }
 
                     //delete product categories
@@ -1699,7 +1699,7 @@ namespace Nop.Services.ExportImport
                             IsFeaturedProduct = false,
                             DisplayOrder = 1
                         };
-                        _manufacturerService.InsertProductManufacturer(productManufacturer);
+                        _manufacturerService.InsertProductManufacturer(productManufacturer, skipEventNotification);
                     }
 
                     //delete product manufacturers
@@ -1780,7 +1780,9 @@ namespace Nop.Services.ExportImport
             }
 
             //activity log
-            _customerActivityService.InsertActivity("ImportProducts", string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"), metadata.CountProductsInFile));
+            _customerActivityService.InsertActivity("ImportProducts",
+                string.Format(_localizationService.GetResource("ActivityLog.ImportProducts"),
+                    metadata.CountProductsInFile), skipEventNotification);
         }
 
         /// <summary>
@@ -1908,7 +1910,7 @@ namespace Nop.Services.ExportImport
                             Published = published,
                             DisplayOrder = displayOrder
                         };
-                        _stateProvinceService.InsertStateProvince(state);
+                        _stateProvinceService.InsertStateProvince(state, skipEventNotification);
                     }
 
                     count++;
@@ -1917,7 +1919,7 @@ namespace Nop.Services.ExportImport
 
             //activity log
             _customerActivityService.InsertActivity("ImportStates",
-                string.Format(_localizationService.GetResource("ActivityLog.ImportStates"), count));
+                string.Format(_localizationService.GetResource("ActivityLog.ImportStates"), count), skipEventNotification);
 
             return count;
         }
@@ -2028,20 +2030,20 @@ namespace Nop.Services.ExportImport
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
 
                 if (isNew)
-                    _manufacturerService.InsertManufacturer(manufacturer);
+                    _manufacturerService.InsertManufacturer(manufacturer, skipEventNotification);
                 else
                     _manufacturerService.UpdateManufacturer(manufacturer);
 
                 //search engine name
                 if (setSeName)
-                    _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0);
+                    _urlRecordService.SaveSlug(manufacturer, _urlRecordService.ValidateSeName(manufacturer, seName, manufacturer.Name, true), 0, skipEventNotification);
 
                 iRow++;
             }
 
             //activity log
             _customerActivityService.InsertActivity("ImportManufacturers",
-                string.Format(_localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2));
+                string.Format(_localizationService.GetResource("ActivityLog.ImportManufacturers"), iRow - 2), skipEventNotification);
         }
 
         /// <summary>
@@ -2130,7 +2132,7 @@ namespace Nop.Services.ExportImport
 
             //activity log
             _customerActivityService.InsertActivity("ImportCategories",
-                string.Format(_localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count));
+                string.Format(_localizationService.GetResource("ActivityLog.ImportCategories"), iRow - 2 - saveNextTime.Count), skipEventNotification);
 
             if (!saveNextTime.Any())
                 return;

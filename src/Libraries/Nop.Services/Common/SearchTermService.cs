@@ -110,15 +110,19 @@ namespace Nop.Services.Common
         /// Inserts a search term record
         /// </summary>
         /// <param name="searchTerm">Search term</param>
-        public virtual void InsertSearchTerm(SearchTerm searchTerm)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSearchTerm(SearchTerm searchTerm, bool skipEventNotification = false)
         {
             if (searchTerm == null)
                 throw new ArgumentNullException(nameof(searchTerm));
 
             _searchTermRepository.Insert(searchTerm);
 
-            //event notification
-            _eventPublisher.EntityInserted(searchTerm);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(searchTerm);
+            }
         }
 
         /// <summary>

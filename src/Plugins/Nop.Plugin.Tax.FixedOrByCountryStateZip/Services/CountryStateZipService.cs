@@ -101,15 +101,19 @@ namespace Nop.Plugin.Tax.FixedOrByCountryStateZip.Services
         /// Inserts a tax rate
         /// </summary>
         /// <param name="taxRate">Tax rate</param>
-        public virtual void InsertTaxRate(TaxRate taxRate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTaxRate(TaxRate taxRate, bool skipEventNotification = false)
         {
             if (taxRate == null)
                 throw new ArgumentNullException(nameof(taxRate));
 
             _taxRateRepository.Insert(taxRate);
 
-            //event notification
-            _eventPublisher.EntityInserted(taxRate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(taxRate);
+            }
         }
 
         /// <summary>

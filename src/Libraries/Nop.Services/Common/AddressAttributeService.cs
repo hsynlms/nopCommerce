@@ -85,15 +85,19 @@ namespace Nop.Services.Common
         /// Inserts an address attribute
         /// </summary>
         /// <param name="addressAttribute">Address attribute</param>
-        public virtual void InsertAddressAttribute(AddressAttribute addressAttribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAddressAttribute(AddressAttribute addressAttribute, bool skipEventNotification = false)
         {
             if (addressAttribute == null)
                 throw new ArgumentNullException(nameof(addressAttribute));
 
             _addressAttributeRepository.Insert(addressAttribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(addressAttribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(addressAttribute);
+            }
         }
 
         /// <summary>
@@ -161,15 +165,19 @@ namespace Nop.Services.Common
         /// Inserts an address attribute value
         /// </summary>
         /// <param name="addressAttributeValue">Address attribute value</param>
-        public virtual void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAddressAttributeValue(AddressAttributeValue addressAttributeValue, bool skipEventNotification = false)
         {
             if (addressAttributeValue == null)
                 throw new ArgumentNullException(nameof(addressAttributeValue));
 
             _addressAttributeValueRepository.Insert(addressAttributeValue);
-            
-            //event notification
-            _eventPublisher.EntityInserted(addressAttributeValue);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(addressAttributeValue);
+            }
         }
 
         /// <summary>

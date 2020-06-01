@@ -31,7 +31,8 @@ namespace Nop.Services.Stores
         /// Inserts a store
         /// </summary>
         /// <param name="store">Store</param>
-        void InsertStore(Store store);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertStore(Store store, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the store

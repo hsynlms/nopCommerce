@@ -283,7 +283,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum group
         /// </summary>
         /// <param name="forumGroup">Forum group</param>
-        public virtual void InsertForumGroup(ForumGroup forumGroup)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertForumGroup(ForumGroup forumGroup, bool skipEventNotification = false)
         {
             if (forumGroup == null)
             {
@@ -291,9 +292,12 @@ namespace Nop.Services.Forums
             }
 
             _forumGroupRepository.Insert(forumGroup);
-            
-            //event notification
-            _eventPublisher.EntityInserted(forumGroup);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(forumGroup);
+            }
         }
 
         /// <summary>
@@ -392,7 +396,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum
         /// </summary>
         /// <param name="forum">Forum</param>
-        public virtual void InsertForum(Forum forum)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertForum(Forum forum, bool skipEventNotification = false)
         {
             if (forum == null)
             {
@@ -401,8 +406,11 @@ namespace Nop.Services.Forums
 
             _forumRepository.Insert(forum);
 
-            //event notification
-            _eventPublisher.EntityInserted(forum);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(forum);
+            }
         }
 
         /// <summary>
@@ -569,7 +577,8 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumTopic">Forum topic</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public virtual void InsertTopic(ForumTopic forumTopic, bool sendNotifications)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTopic(ForumTopic forumTopic, bool sendNotifications, bool skipEventNotification = false)
         {
             if (forumTopic == null)
             {
@@ -581,8 +590,11 @@ namespace Nop.Services.Forums
             //update stats
             UpdateForumStats(forumTopic.ForumId);
 
-            //event notification
-            _eventPublisher.EntityInserted(forumTopic);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(forumTopic);
+            }
             
             if (!sendNotifications) 
                 return;
@@ -779,7 +791,8 @@ namespace Nop.Services.Forums
         /// </summary>
         /// <param name="forumPost">The forum post</param>
         /// <param name="sendNotifications">A value indicating whether to send notifications to subscribed customers</param>
-        public virtual void InsertPost(ForumPost forumPost, bool sendNotifications)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPost(ForumPost forumPost, bool sendNotifications, bool skipEventNotification = false)
         {
             if (forumPost == null)
             {
@@ -796,9 +809,12 @@ namespace Nop.Services.Forums
             UpdateForumStats(forumId);
             UpdateCustomerStats(customerId);
 
-            //event notification
-            _eventPublisher.EntityInserted(forumPost);
-
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(forumPost);
+            }
+            
             //notifications
             if (!sendNotifications) 
                 return;
@@ -923,7 +939,8 @@ namespace Nop.Services.Forums
         /// Inserts a private message
         /// </summary>
         /// <param name="privateMessage">Private message</param>
-        public virtual void InsertPrivateMessage(PrivateMessage privateMessage)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPrivateMessage(PrivateMessage privateMessage, bool skipEventNotification = false)
         {
             if (privateMessage == null)
             {
@@ -932,8 +949,11 @@ namespace Nop.Services.Forums
 
             _forumPrivateMessageRepository.Insert(privateMessage);
 
-            //event notification
-            _eventPublisher.EntityInserted(privateMessage);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(privateMessage);
+            }
 
             var customerTo = _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
@@ -1040,7 +1060,8 @@ namespace Nop.Services.Forums
         /// Inserts a forum subscription
         /// </summary>
         /// <param name="forumSubscription">Forum subscription</param>
-        public virtual void InsertSubscription(ForumSubscription forumSubscription)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertSubscription(ForumSubscription forumSubscription, bool skipEventNotification = false)
         {
             if (forumSubscription == null)
             {
@@ -1049,8 +1070,11 @@ namespace Nop.Services.Forums
 
             _forumSubscriptionRepository.Insert(forumSubscription);
 
-            //event notification
-            _eventPublisher.EntityInserted(forumSubscription);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(forumSubscription);
+            }
         }
 
         /// <summary>
@@ -1389,7 +1413,8 @@ namespace Nop.Services.Forums
         /// Insert a post vote
         /// </summary>
         /// <param name="postVote">Post vote</param>
-        public virtual void InsertPostVote(ForumPostVote postVote)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPostVote(ForumPostVote postVote, bool skipEventNotification = false)
         {
             if (postVote == null)
                 throw new ArgumentNullException(nameof(postVote));
@@ -1401,8 +1426,11 @@ namespace Nop.Services.Forums
             post.VoteCount = postVote.IsUp ? ++post.VoteCount : --post.VoteCount;
             UpdatePost(post);
 
-            //event notification
-            _eventPublisher.EntityInserted(postVote);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(postVote);
+            }
         }
 
         /// <summary>

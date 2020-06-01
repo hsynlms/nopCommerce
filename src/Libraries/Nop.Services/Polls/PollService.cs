@@ -145,15 +145,19 @@ namespace Nop.Services.Polls
         /// Inserts a poll
         /// </summary>
         /// <param name="poll">Poll</param>
-        public virtual void InsertPoll(Poll poll)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPoll(Poll poll, bool skipEventNotification = false)
         {
             if (poll == null)
                 throw new ArgumentNullException(nameof(poll));
 
             _pollRepository.Insert(poll);
 
-            //event notification
-            _eventPublisher.EntityInserted(poll);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(poll);
+            }
         }
 
         /// <summary>
@@ -221,15 +225,19 @@ namespace Nop.Services.Polls
         /// Inserts a poll answer
         /// </summary>
         /// <param name="pollAnswer">Poll answer</param>
-        public virtual void InsertPollAnswer(PollAnswer pollAnswer)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPollAnswer(PollAnswer pollAnswer, bool skipEventNotification = false)
         {
             if (pollAnswer == null)
                 throw new ArgumentNullException(nameof(pollAnswer));
 
             _pollAnswerRepository.Insert(pollAnswer);
 
-            //event notification
-            _eventPublisher.EntityInserted(pollAnswer);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(pollAnswer);
+            }
         }
 
         /// <summary>
@@ -269,15 +277,19 @@ namespace Nop.Services.Polls
         /// Inserts a poll voting record
         /// </summary>
         /// <param name="pollVotingRecord">Voting record</param>
-        public virtual void InsertPollVotingRecord(PollVotingRecord pollVotingRecord)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertPollVotingRecord(PollVotingRecord pollVotingRecord, bool skipEventNotification = false)
         {
             if (pollVotingRecord == null)
                 throw new ArgumentNullException(nameof(pollVotingRecord));
 
             _pollVotingRecordRepository.Insert(pollVotingRecord);
 
-            //event notification
-            _eventPublisher.EntityInserted(pollVotingRecord);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(pollVotingRecord);
+            }
         }
 
         /// <summary>

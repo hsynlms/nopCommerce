@@ -84,15 +84,19 @@ namespace Nop.Services.Tax
         /// Inserts a tax category
         /// </summary>
         /// <param name="taxCategory">Tax category</param>
-        public virtual void InsertTaxCategory(TaxCategory taxCategory)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertTaxCategory(TaxCategory taxCategory, bool skipEventNotification = false)
         {
             if (taxCategory == null)
                 throw new ArgumentNullException(nameof(taxCategory));
 
             _taxCategoryRepository.Insert(taxCategory);
 
-            //event notification
-            _eventPublisher.EntityInserted(taxCategory);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(taxCategory);
+            }
         }
 
         /// <summary>

@@ -169,15 +169,19 @@ namespace Nop.Services.Affiliates
         /// Inserts an affiliate
         /// </summary>
         /// <param name="affiliate">Affiliate</param>
-        public virtual void InsertAffiliate(Affiliate affiliate)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAffiliate(Affiliate affiliate, bool skipEventNotification = false)
         {
             if (affiliate == null)
                 throw new ArgumentNullException(nameof(affiliate));
 
             _affiliateRepository.Insert(affiliate);
 
-            //event notification
-            _eventPublisher.EntityInserted(affiliate);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(affiliate);
+            }
         }
 
         /// <summary>

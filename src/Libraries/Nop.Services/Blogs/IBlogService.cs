@@ -68,7 +68,8 @@ namespace Nop.Services.Blogs
         /// Inserts a blog post
         /// </summary>
         /// <param name="blogPost">Blog post</param>
-        void InsertBlogPost(BlogPost blogPost);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertBlogPost(BlogPost blogPost, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the blog post
@@ -157,7 +158,8 @@ namespace Nop.Services.Blogs
         /// Inserts a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
-        void InsertBlogComment(BlogComment blogComment);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertBlogComment(BlogComment blogComment, bool skipEventNotification = false);
 
         /// <summary>
         /// Update a blog comment

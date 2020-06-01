@@ -463,7 +463,7 @@ namespace Nop.Services.Orders
 
                 var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(details.Customer,
                     sci.ShoppingCartType, product, processPaymentRequest.StoreId, sci.AttributesXml,
-                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id);
+                    sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false, sci.Id, skipEventNotification: skipEventNotification);
                 if (sciWarnings.Any())
                     throw new NopException(sciWarnings.Aggregate(string.Empty, (current, next) => $"{current}{next};"));
             }
@@ -813,18 +813,18 @@ namespace Nop.Services.Orders
             if (details.BillingAddress is null)
                 throw new NopException("Billing address is not provided");
 
-            _addressService.InsertAddress(details.BillingAddress);
+            _addressService.InsertAddress(details.BillingAddress, skipEventNotification);
             order.BillingAddressId = details.BillingAddress.Id;
 
             if (details.PickupAddress != null)
             {
-                _addressService.InsertAddress(details.PickupAddress);
+                _addressService.InsertAddress(details.PickupAddress, skipEventNotification);
                 order.PickupAddressId = details.PickupAddress.Id;
             }
 
             if (details.ShippingAddress != null)
             {
-                _addressService.InsertAddress(details.ShippingAddress);
+                _addressService.InsertAddress(details.ShippingAddress, skipEventNotification);
                 order.ShippingAddressId = details.ShippingAddress.Id;
             }
 
@@ -840,7 +840,7 @@ namespace Nop.Services.Orders
 
             _rewardPointService.AddRewardPointsHistoryEntry(details.Customer, -details.RedeemedRewardPoints, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.CustomOrderNumber),
-                order, details.RedeemedRewardPointsAmount);
+                order, details.RedeemedRewardPointsAmount, skipEventNotification: skipEventNotification);
             _customerService.UpdateCustomer(details.Customer);
 
             return order;
@@ -926,7 +926,7 @@ namespace Nop.Services.Orders
             //add reward points
             order.RewardPointsHistoryEntryId = _rewardPointService.AddRewardPointsHistoryEntry(customer, points, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.CustomOrderNumber),
-                activatingDate: activatingDate, endDate: endDate);
+                activatingDate: activatingDate, endDate: endDate, skipEventNotification: skipEventNotification);
 
             _orderService.UpdateOrder(order);
         }
@@ -964,7 +964,8 @@ namespace Nop.Services.Orders
             {
                 //or reduce reward points if the entry already exists
                 _rewardPointService.AddRewardPointsHistoryEntry(customer, -points, order.StoreId,
-                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber));
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.CustomOrderNumber),
+                    skipEventNotification: skipEventNotification);
             }
         }
 
@@ -980,10 +981,11 @@ namespace Nop.Services.Orders
             var customer = _customerService.GetCustomerById(order.CustomerId);
 
             //were some reward points spend on the order
-            foreach (var rewardPoints in _rewardPointService.GetRewardPointsHistory(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid))
+            foreach (var rewardPoints in _rewardPointService.GetRewardPointsHistory(order.CustomerId, order.StoreId, orderGuid: order.OrderGuid, skipEventNotification: skipEventNotification))
                 //return back
                 _rewardPointService.AddRewardPointsHistoryEntry(customer, -rewardPoints.Points, order.StoreId,
-                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber));
+                    string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.CustomOrderNumber),
+                    skipEventNotification: skipEventNotification);
         }
 
         /// <summary>
@@ -1202,7 +1204,7 @@ namespace Nop.Services.Orders
                     if (add)
                     {
                         //add
-                        _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id });
+                        _customerService.AddCustomerRoleMapping(new CustomerCustomerRoleMapping { CustomerId = customer.Id, CustomerRoleId = customerRole.Id }, skipEventNotification);
                     }
                 }
                 else
@@ -1343,7 +1345,7 @@ namespace Nop.Services.Orders
             }
 
             //clear shopping cart
-            details.Cart.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
+            details.Cart.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false, skipEventNotification: skipEventNotification));
         }
 
         /// <summary>
@@ -1378,7 +1380,7 @@ namespace Nop.Services.Orders
                     Message = giftCardMessage,
                     IsRecipientNotified = false,
                     CreatedOnUtc = DateTime.UtcNow
-                });
+                }, skipEventNotification);
             }
         }
 
@@ -1448,7 +1450,7 @@ namespace Nop.Services.Orders
                     UsedWithOrderId = order.Id,
                     UsedValue = agc.AmountCanBeUsed,
                     CreatedOnUtc = DateTime.UtcNow
-                });
+                }, skipEventNotification);
             }
         }
 
@@ -1472,7 +1474,7 @@ namespace Nop.Services.Orders
                         DiscountId = d.Id,
                         OrderId = order.Id,
                         CreatedOnUtc = DateTime.UtcNow
-                    });
+                    }, skipEventNotification);
                 }
             }
         }
@@ -1600,7 +1602,7 @@ namespace Nop.Services.Orders
                     //reset checkout data
                     _customerService.ResetCheckoutData(details.Customer, processPaymentRequest.StoreId, clearCouponCodes: true, clearCheckoutAttributes: true);
                     _customerActivityService.InsertActivity("PublicStore.PlaceOrder",
-                        string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order);
+                        string.Format(_localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"), order.Id), order, skipEventNotification);
 
                     //check order status
                     CheckOrderStatus(order);
@@ -1661,7 +1663,8 @@ namespace Nop.Services.Orders
 
                 updateOrderParameters.Warnings.AddRange(_shoppingCartService.GetShoppingCartItemWarnings(customer, updatedShoppingCartItem.ShoppingCartType,
                     product, updatedOrder.StoreId, updatedShoppingCartItem.AttributesXml, updatedShoppingCartItem.CustomerEnteredPrice,
-                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false, updatedShoppingCartItem.Id));
+                    updatedShoppingCartItem.RentalStartDateUtc, updatedShoppingCartItem.RentalEndDateUtc, updatedShoppingCartItem.Quantity, false,
+                    updatedShoppingCartItem.Id, skipEventNotification: skipEventNotification));
 
                 updatedOrderItem.ItemWeight = _shippingService.GetShoppingCartItemWeight(updatedShoppingCartItem);
                 updatedOrderItem.OriginalProductCost = _priceCalculationService.GetProductCost(product, updatedShoppingCartItem.AttributesXml);
@@ -1688,7 +1691,7 @@ namespace Nop.Services.Orders
                     CreatedOnUtc = DateTime.UtcNow
                 };
 
-                _addressService.InsertAddress(pickupAddress);
+                _addressService.InsertAddress(pickupAddress, skipEventNotification);
 
                 updatedOrder.PickupAddressId = pickupAddress.Id;
                 updatedOrder.ShippingMethod = string.Format(_localizationService.GetResource("Checkout.PickupPoints.Name"), updateOrderParameters.PickupPoint.Name);
@@ -1712,7 +1715,7 @@ namespace Nop.Services.Orders
                         DiscountId = d.Id,
                         OrderId = updatedOrder.Id,
                         CreatedOnUtc = DateTime.UtcNow
-                    });
+                    }, skipEventNotification);
                 }
             }
 
@@ -3023,7 +3026,7 @@ namespace Nop.Services.Orders
                     ShoppingCartType.ShoppingCart, order.StoreId,
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
-                    orderItem.Quantity, false);
+                    orderItem.Quantity, false, skipEventNotification);
             }
 
             //set checkout attributes

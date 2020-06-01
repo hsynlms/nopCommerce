@@ -210,7 +210,7 @@ namespace Nop.Services.Authentication.External
         protected virtual IActionResult LoginUser(Customer user, string returnUrl)
         {
             //migrate shopping cart
-            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, user, true);
+            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, user, true, skipEventNotification);
 
             //authenticate
             _authenticationService.SignIn(user, false);
@@ -220,7 +220,7 @@ namespace Nop.Services.Authentication.External
 
             //activity log
             _customerActivityService.InsertActivity(user, "PublicStore.Login",
-                _localizationService.GetResource("ActivityLog.PublicStore.Login"), user);
+                _localizationService.GetResource("ActivityLog.PublicStore.Login"), user, skipEventNotification);
 
             return SuccessfulAuthentication(returnUrl);
         }

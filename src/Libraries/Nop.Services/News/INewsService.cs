@@ -49,7 +49,8 @@ namespace Nop.Services.News
         /// Inserts a news item
         /// </summary>
         /// <param name="news">News item</param>
-        void InsertNews(NewsItem news);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertNews(NewsItem news, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the news item
@@ -122,7 +123,8 @@ namespace Nop.Services.News
         /// Inserts a news comment
         /// </summary>
         /// <param name="comment">News comment</param>
-        void InsertNewsComment(NewsComment comment);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertNewsComment(NewsComment comment, bool skipEventNotification = false);
 
         /// <summary>
         /// Update a news comment

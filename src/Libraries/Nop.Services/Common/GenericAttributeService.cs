@@ -86,16 +86,20 @@ namespace Nop.Services.Common
         /// Inserts an attribute
         /// </summary>
         /// <param name="attribute">attribute</param>
-        public virtual void InsertAttribute(GenericAttribute attribute)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertAttribute(GenericAttribute attribute, bool skipEventNotification = false)
         {
             if (attribute == null)
                 throw new ArgumentNullException(nameof(attribute));
 
             attribute.CreatedOrUpdatedDateUTC = DateTime.UtcNow;
             _genericAttributeRepository.Insert(attribute);
-            
-            //event notification
-            _eventPublisher.EntityInserted(attribute);
+
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(attribute);
+            }
         }
 
         /// <summary>
@@ -191,7 +195,7 @@ namespace Nop.Services.Common
                     StoreId = storeId
                 };
 
-                InsertAttribute(prop);
+                InsertAttribute(prop, skipEventNotification);
             }
         }
 

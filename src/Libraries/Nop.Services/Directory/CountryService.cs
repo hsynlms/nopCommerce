@@ -232,15 +232,19 @@ namespace Nop.Services.Directory
         /// Inserts a country
         /// </summary>
         /// <param name="country">Country</param>
-        public virtual void InsertCountry(Country country)
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        public virtual void InsertCountry(Country country, bool skipEventNotification = false)
         {
             if (country == null)
                 throw new ArgumentNullException(nameof(country));
 
             _countryRepository.Insert(country);
 
-            //event notification
-            _eventPublisher.EntityInserted(country);
+            if (!skipEventNotification)
+            {
+                //event notification
+                _eventPublisher.EntityInserted(country);
+            }
         }
 
         /// <summary>

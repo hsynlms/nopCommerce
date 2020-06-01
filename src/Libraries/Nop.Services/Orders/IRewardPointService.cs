@@ -19,9 +19,11 @@ namespace Nop.Services.Orders
         /// <param name="orderGuid">Order Guid; pass null to load all record</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Reward point history records</returns>
         IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, int? storeId = null,
-            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue);
+            bool showNotActivated = false, Guid? orderGuid = null, int pageIndex = 0, int pageSize = int.MaxValue,
+            bool skipEventNotification = false);
 
         /// <summary>
         /// Gets reduced reward points balance per order
@@ -35,8 +37,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier</param>
         /// <param name="storeId">Store identifier</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Balance</returns>
-        int GetRewardPointsBalance(int customerId, int storeId);
+        int GetRewardPointsBalance(int customerId, int storeId, bool skipEventNotification = false);
 
         /// <summary>
         /// Add reward points history record
@@ -49,9 +52,11 @@ namespace Nop.Services.Orders
         /// <param name="usedAmount">Used amount</param>
         /// <param name="activatingDate">Date and time of activating reward points; pass null to immediately activating</param>
         /// <param name="endDate">Date and time when the reward points will no longer be valid; pass null to add date termless points</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Reward points history entry identifier</returns>
         int AddRewardPointsHistoryEntry(Customer customer, int points, int storeId, string message = "",
-            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null);
+            Order usedWithOrder = null, decimal usedAmount = 0M, DateTime? activatingDate = null, DateTime? endDate = null,
+            bool skipEventNotification = false);
 
         /// <summary>
         /// Gets a reward point history entry
@@ -64,7 +69,8 @@ namespace Nop.Services.Orders
         /// Insert the reward point history entry
         /// </summary>
         /// <param name="rewardPointsHistory">Reward point history entry</param>
-        void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory);
+        /// <param name="skipEventNotification">Skip firing event notification</param>
+        void InsertRewardPointsHistoryEntry(RewardPointsHistory rewardPointsHistory, bool skipEventNotification = false);
         
         /// <summary>
         /// Updates the reward point history entry

@@ -240,7 +240,7 @@ namespace Nop.Services.ExportImport
         protected virtual string GetPictures(int pictureId)
         {
             var picture = _pictureService.GetPictureById(pictureId);
-            return _pictureService.GetThumbLocalPath(picture);
+            return _pictureService.GetThumbLocalPath(picture, skipEventNotification);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace Nop.Services.ExportImport
             var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
             for (var i = 0; i < pictures.Count; i++)
             {
-                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i], skipEventNotification);
                 switch (i)
                 {
                     case 0:

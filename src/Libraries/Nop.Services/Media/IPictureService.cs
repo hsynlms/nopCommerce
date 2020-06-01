@@ -51,12 +51,14 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture URL</returns>
         string GetPictureUrl(int pictureId,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
-            PictureType defaultPictureType = PictureType.Entity);
+            PictureType defaultPictureType = PictureType.Entity,
+            bool skipEventNotification = false);
 
         /// <summary>
         /// Get a picture URL
@@ -66,12 +68,14 @@ namespace Nop.Services.Media
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
         /// <param name="storeLocation">Store location URL; null to use determine the current store location automatically</param>
         /// <param name="defaultPictureType">Default picture type</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture URL</returns>
         string GetPictureUrl(ref Picture picture,
             int targetSize = 0,
             bool showDefaultPicture = true,
             string storeLocation = null,
-            PictureType defaultPictureType = PictureType.Entity);
+            PictureType defaultPictureType = PictureType.Entity,
+            bool skipEventNotification = false);
 
         /// <summary>
         /// Get a picture local path
@@ -79,8 +83,9 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns></returns>
-        string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true);
+        string GetThumbLocalPath(Picture picture, int targetSize = 0, bool showDefaultPicture = true, bool skipEventNotification = false);
 
         /// <summary>
         /// Gets a picture
@@ -122,10 +127,11 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
         Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
             string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true);
+            bool isNew = true, bool validateBinary = true, bool skipEventNotification = false);
 
         /// <summary>
         /// Inserts a picture
@@ -133,8 +139,9 @@ namespace Nop.Services.Media
         /// <param name="formFile">Form file</param>
         /// <param name="defaultFileName">File name which will be use if IFormFile.FileName not present</param>
         /// <param name="virtualPath">Virtual path</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "");
+        Picture InsertPicture(IFormFile formFile, string defaultFileName = "", string virtualPath = "", bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the picture
@@ -147,25 +154,28 @@ namespace Nop.Services.Media
         /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
         Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
             string seoFilename, string altAttribute = null, string titleAttribute = null,
-            bool isNew = true, bool validateBinary = true);
+            bool isNew = true, bool validateBinary = true, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates the picture
         /// </summary>
         /// <param name="picture">The picture to update</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(Picture picture);
+        Picture UpdatePicture(Picture picture, bool skipEventNotification = false);
 
         /// <summary>
         /// Updates a SEO filename of a picture
         /// </summary>
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="skipEventNotification">Skip firing event notification</param>
         /// <returns>Picture</returns>
-        Picture SetSeoFilename(int pictureId, string seoFilename);
+        Picture SetSeoFilename(int pictureId, string seoFilename, bool skipEventNotification = false);
 
         /// <summary>
         /// Validates input picture dimensions
